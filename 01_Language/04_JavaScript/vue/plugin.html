@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <p v-my-directive="msg"></p>
+</div>
+
+<script type="text/javascript" src="js/vue.js"></script>
+<script type="text/javascript" src="js/vue-my-plugin.js"></script>
+<script type="text/javascript">
+    Vue.config.devtools = true
+
+    // 使用自定义插件
+    Vue.use(MyPlugin)
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "Hello, Vue"
+        }
+    })
+
+    // 调用自定义的静态方法
+    Vue.myGlobalMethod()
+
+    // 调用自定义的对象方法
+    vm.$myMethod()
+</script>
+</body>
+</html>

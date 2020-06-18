@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <h2>1. 双大括号表达式</h2>
+    <p>{{msg}}</p>
+    <p>{{msg.toUpperCase()}}</p>
+
+    <h2>2. 指令一：强制数据绑定</h2>
+    <a href="url">访问指定站点</a><br><!-- 不能使用 -->
+    <a v-bind:href="url">访问指定站点2</a><br>
+    <a :href="url">访问指定站点3</a><br>
+
+    <h2>3. 指令二：绑定时间监听</h2>
+    <button v-on:click="handleClick">点我</button>
+    <button @click="handleClick">点我2</button>
+</div>
+<script type="text/javascript" src="js/vue.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: "#app",
+        data: {
+            msg: "NBA I Love This Game!",
+            url: "http://www.baidu.com"
+        },
+        methods: {
+            handleClick() {
+                alert("处理点击")
+            }
+        }
+    })
+</script>
+</body>
+</html>

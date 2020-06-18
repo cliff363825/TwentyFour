@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <button @click="destroyVue">destroy vue</button>
+    <p v-show="isShowing">{{msg}}</p>
+</div>
+<script type="text/javascript" src="js/vue.js"></script>
+<script type="text/javascript">
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "Life cycle",
+            isShowing: true,
+            persons: []
+        },
+        beforeCreate() {
+            console.log("beforeCreate() msg = " + this.msg)
+        },
+        created() {
+            console.log("created() msg = " + this.msg)
+
+            this.intervalId = setInterval(() => {
+                console.log("----")
+                this.isShowing = !this.isShowing
+            }, 1000)
+        },
+        beforeMount() {
+            console.log("beforeMount() msg = " + this.msg)
+        },
+        mounted() {
+            console.log("mounted() msg = " + this.msg)
+        },
+        beforeUpdate() {
+            console.log("beforeUpdate isShowing = " + this.isShowing)
+        },
+        updated() {
+            console.log("updated isShowing = " + this.isShowing)
+        },
+        beforeDestroy() {
+            console.log("beforeDestroy() msg = " + this.msg)
+        },
+        destroyed() {
+            console.log("destroyed() msg = " + this.msg)
+        },
+        methods: {
+            destroyVue() {
+                vm.$destroy()
+            }
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .classA {
+            color: red;
+        }
+        .classB {
+            background: blue;
+        }
+        .classC {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <h2>1. class绑定：:class='xxx'</h2>
+    <p class="classB" v-bind:class="a">表达式是字符串</p>
+    <p :class="{classA: isA, classB: isB}">表达式是对象：{classA: isA, classB: isB}</p>
+    <p :class="['classA', 'classC']">表达式是数组：['classA', 'classC']</p>
+
+    <h2>2. style绑定</h2>
+    <p v-bind:style="{color, fontSize}">style="{color: activeColor, fontSize: fontSize + 'px'}"</p>
+    <button v-on:click="update">更新</button>
+</div>
+<script type="text/javascript" src="js/vue.js"></script>
+<script type="text/javascript">
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            a: "classA",
+            isA: true,
+            isB: false,
+            color: "red",
+            fontSize: "20px"
+        },
+        methods: {
+            update() {
+                this.a = "classC"
+                this.isA = false
+                this.isB = true
+                this.color = "blue"
+                this.fontSize = "30px"
+            }
+        }
+    })
+</script>
+</body>
+</html>

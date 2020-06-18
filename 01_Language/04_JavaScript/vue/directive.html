@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <p v-text="url"></p>
+    <p v-html="url"></p>
+    <img :id="myId" :src="imageSrc">
+    <p>
+        <span ref="message">onevgo.com</span>
+        <button @click="showMsg">显示左侧文本</button>
+    </p>
+    <p v-cloak>{{url}}</p>
+</div>
+
+<script type="text/javascript" src="js/vue.js"></script>
+<script type="text/javascript">
+    Vue.config.devtools = true
+    alert("模拟加载慢")
+    new Vue({
+        el: "#app",
+        data: {
+            url: '<a href="https://www.onevgo.com/">Blog</a>',
+            myId: "abc123",
+            imageSrc: "http://cn.vuejs.org/images/logo.png"
+        },
+        methods: {
+            showMsg() {
+                alert(this.$refs.message.textContent)
+            }
+        }
+    })
+</script>
+</body>
+</html>

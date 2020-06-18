@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <h2>1. 绑定监听</h2>
+    <button v-on:click="test1">Greet</button>
+    <button @click="test1">Greet2</button>
+    <button @click="test2($event, 'hello')">Greet3</button>
+
+    <h2>2. 事件修饰符</h2>
+    <!-- 阻止事件默认行为 -->
+    <a href="http://www.baidu.com" @click.prevent="test3">百度一下</a>
+    <br><br>
+    <!-- 停止事件冒泡 -->
+    <div style="width: 200px;height: 200px;background: red" @click="test4">
+        <div style="width: 100px;height: 100px;background: green" @click.stop="test5"></div>
+    </div>
+
+    <h2>3. 按键修饰符</h2>
+    <input @keyup.8="test6">
+    <input @keyup.enter="test6">
+</div>
+<script type="text/javascript" src="js/vue.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: "#app",
+        data: {
+            name: "Vue.js"
+        },
+        methods: {
+            test1(event) {
+                // 方法内 this 指向 vm
+                alert("Hello " + this.name)
+                // event 是原生 DOM 事件
+                alert(event.target.innerHTML)
+            },
+            test2(event, msg) {
+                alert(event.target.innerHTML + " - " + msg)
+            },
+            test3() {
+                alert("阻止事件的默认行为")
+            },
+            test4() {
+                alert("out")
+            },
+            test5() {
+                alert("inner")
+            },
+            test6() {
+                alert(event.keyCode + " - " + event.target.value)
+            }
+        }
+    })
+</script>
+</body>
+</html>
