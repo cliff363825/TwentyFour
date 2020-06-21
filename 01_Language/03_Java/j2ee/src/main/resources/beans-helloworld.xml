@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 配置bean -->
+    <bean id="helloWorld" class="com.onevgo.spring.helloworld.HelloWorld">
+        <property name="name" value="onevgo"/>
+    </bean>
+
+    <bean id="helloWorld2" class="com.onevgo.spring.helloworld.HelloWorld">
+        <property name="name" value="onevgo"/>
+    </bean>
+
+    <!-- 通过构造方法来配置 bean 的属性 -->
+    <bean id="car" class="com.onevgo.spring.helloworld.Car">
+        <constructor-arg value="Audi" index="0"></constructor-arg>
+        <constructor-arg value="Shanghai" index="1"></constructor-arg>
+        <constructor-arg value="300000" index="2" type="double"></constructor-arg>
+    </bean>
+
+    <!-- 使用构造器注入属性值可以指定参数的位置和参数的类型！以区分重载的构造器 -->
+    <bean id="car2" class="com.onevgo.spring.helloworld.Car">
+        <constructor-arg type="java.lang.String">
+            <value><![CDATA[<Baoma>]]></value>
+        </constructor-arg>
+        <!-- 如果字面值包含特殊字符可以使用 <![CDATA[]]> 包裹起来 -->
+        <!-- 属性值也可以使用 value 直接点进行配置 -->
+        <constructor-arg type="java.lang.String">
+            <value><![CDATA[<Shanghai>]]></value>
+        </constructor-arg>
+        <constructor-arg type="int">
+            <value>240</value>
+        </constructor-arg>
+    </bean>
+
+    <bean id="person" class="com.onevgo.spring.helloworld.Person">
+        <property name="name" value="Tome"></property>
+        <property name="age" value="24"></property>
+        <!-- 可以使用 property 的 ref 属性建立 bean 之间的引用关系 -->
+        <!--
+        <property name="car" ref="car2"></property>
+        -->
+        <!--
+        <property name="car">
+            <ref bean="car2"></ref>
+        </property>
+        -->
+        <!-- 内部bean，不能被外部引用，只能在内部使用 -->
+        <property name="car">
+            <bean class="com.onevgo.spring.helloworld.Car">
+                <constructor-arg value="Ford" type="java.lang.String"></constructor-arg>
+                <constructor-arg value="Changan" type="java.lang.String"></constructor-arg>
+                <constructor-arg value="200000" type="double"></constructor-arg>
+            </bean>
+        </property>
+        <!-- 为级联属性赋值，注意：属性需要先初始化后才可以为级联属性赋值。否则会有异常，和Struts2不同 -->
+        <property name="car.maxSpeed" value="260"></property>
+    </bean>
+
+    <bean id="person2" class="com.onevgo.spring.helloworld.Person">
+        <constructor-arg value="Jerry"></constructor-arg>
+        <constructor-arg value="25"></constructor-arg>
+        <constructor-arg ref="car"></constructor-arg>
+        <!-- 为级联属性赋值，注意：属性需要先初始化后才可以为级联属性赋值。否则会有异常，和Struts2不同 -->
+        <property name="car.price" value="30000"></property>
+        <!-- 测试赋值 null -->
+        <!--
+        <constructor-arg><null/></constructor-arg>
+        -->
+    </bean>
+
+    <!-- 通过 p 命名空间为 bean 的属性赋值，需要先导入 p 命名空间，相对于传统的配置方式更加的简洁。 -->
+    <bean id="person3" class="com.onevgo.spring.helloworld.Person"
+          p:name="Queen" p:age="30" p:car-ref="car"></bean>
+</beans>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<customers>
+    <customer>
+        <id>1001</id>
+        <name>Tom</name>
+        <address>Shenzhen</address>
+        <phone>13800000000</phone>
+    </customer>
+
+    <customer>
+        <id>1002</id>
+        <name>Jerry</name>
+        <address>Nanning</address>
+        <phone>13800000001</phone>
+    </customer>
+</customers>

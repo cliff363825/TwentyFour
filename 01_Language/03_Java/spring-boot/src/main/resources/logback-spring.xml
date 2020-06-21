@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+根节点<configuration>，包含下面三个属性
+    scan        当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true。
+    scanPeriod  设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。
+    debug       当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。
+-->
+<configuration>
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <property name="FILE_LOG_PATTERN" value="${FILE_LOG_PATTERN:-%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+
+    <!--
+    子节点<property> 用来定义变量值，它有两个属性name和value，通过<property>定义的值会被插入到logger上下文中，可以使"${}"来使用变量。
+        name    属性名
+        value   属性值
+    -->
+    <!-- 定义日志文件名称 -->
+    <property name="APP_NAME" value="springboot"/>
+    <!-- 定义日志文件目录 勿在 logback 的配置中使用相对路径 -->
+    <property name="LOG_HOME" value="./logs/"/>
+
+    <!--
+    子节点<contextName> 用来设置上下文名称，每个logger都关联到logger上下文，默认上下文名称为default。
+    但可以使用<contextName>设置成其他名字，用于区分不同应用程序的记录。一旦设置，不能修改。
+    -->
+    <contextName>${APP_NAME}</contextName>
+
+    <!--
+    子节点<appender> 负责写日志的组件，它有两个必要属性name和class。
+        name    指定appender名称，
+        class   指定appender的全限定名
+
+    ConsoleAppender 把日志输出到控制台，有以下子节点：
+        <encoder>   对日志进行格式化。
+        <target>    字符串System.out(默认)或者System.err
+
+    FileAppender 把日志添加到文件，有以下子节点：
+        <file>      被写入的文件名，可以是相对目录，也可以是绝对目录，如果上级目录不存在会自动创建，没有默认值。
+        <append>    如果是 true，日志被追加到文件结尾，如果是 false，清空现存文件，默认是true。
+        <encoder>   对记录事件进行格式化。
+        <prudent>   如果是 true，日志会被安全的写入文件，即使其他的FileAppender也在向此文件做写入操作，效率低，默认是 false。
+
+    RollingFileAppender 滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件。有以下子节点：
+        <file>              被写入的文件名，可以是相对目录，也可以是绝对目录，如果上级目录不存在会自动创建，没有默认值。
+        <append>            如果是 true，日志被追加到文件结尾，如果是 false，清空现存文件，默认是true。
+        <encoder>           对记录事件进行格式化。负责两件事，一是把日志信息转换成字节数组，二是把字节数组写入到输出流。
+            PatternLayoutEncoder    是唯一有用的且默认的encoder，有一个<pattern>节点，用来设置日志的输入格式。使用"%"加"转换符"方式，如果要输出"%"，则必须用"\"对"\%"进行转义。
+        <rollingPolicy>     当发生滚动时，决定RollingFileAppender的行为，涉及文件移动和重命名。属性class定义具体的滚动策略类
+            class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy" 最常用的滚动策略，它根据时间来制定滚动策略，既负责滚动也负责出发滚动。有以下子节点：
+                <fileNamePattern>   必要节点，包含文件名及"%d"转换符，"%d"可以包含一个java.text.SimpleDateFormat指定的时间格式，如：%d{yyyy-MM}。如果直接使用 %d，默认格式是 yyyy-MM-dd。
+                                    RollingFileAppender的file子节点可有可无，通过设置file，可以为活动文件和归档文件指定不同位置，当前日志总是记录到file指定的文件（活动文件），活动文件的名字不会改变；
+                                    如果没设置file，活动文件的名字会根据fileNamePattern 的值，每隔一段时间改变一次。"/"或者"\"会被当做目录分隔符。
+                <maxHistory>        可选节点，控制保留的归档文件的最大数量，超出数量就删除旧文件。假设设置每个月滚动，且<maxHistory>是6，则只保存最近6个月的文件，删除之前的旧文件。
+                                    注意，删除旧文件时，那些为了归档而创建的目录也会被删除。
+                <triggeringPolicy>  告知 RollingFileAppender 何时激活滚动。
+                    class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy" 查看当前活动文件的大小，如果超过指定大小会告知RollingFileAppender 触发当前活动文件滚动。只有一个节点:
+                        <maxFileSize>   这是活动文件的大小，默认值是10MB。
+            class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy" 根据固定窗口算法重命名文件的滚动策略。有以下子节点：
+                <minIndex>          窗口索引最小值
+                <maxIndex>          窗口索引最大值，当用户指定的窗口过大时，会自动将窗口设置为12。
+                <fileNamePattern>   必须包含"%i"例如，假设最小值和最大值分别为1和2，命名模式为 mylog%i.log,会产生归档文件mylog1.log和mylog2.log。
+                                    还可以指定文件压缩选项，例如，mylog%i.log.gz 或者 mylog%i.log.zip
+        <prudent>           当为true时，不支持FixedWindowRollingPolicy。支持TimeBasedRollingPolicy，但是有两个限制，1不支持也不允许文件压缩，2不能设置file属性，必须留空。
+
+    SocketAppender
+    SMTPAppenderDBAppender
+    SyslogAppender
+    SiftingAppender
+    -->
+    <!-- 控制台输出 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <!--
+        日志输出格式
+        %d          表示日期时间
+        %thread     表示线程名
+        %-5level    级别从左显示5个字符宽度
+        %logger{50} 表示logger名字最长50个字符，否则按照句点分割。
+        %msg        日志消息
+        %n          是换行符
+        -->
+        <!--
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <springProfile name="dev">
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} **** [%thread] **** %-5level %logger{50} - %msg%n</pattern>
+            </springProfile>
+            <springProfile name="!dev">
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} ==== [%thread] ==== %-5level %logger{50} - %msg%n</pattern>
+            </springProfile>
+        </layout>
+        -->
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 按照每天生成日志文件 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </layout>
+        -->
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <file>${LOG_HOME}/${APP_NAME}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 日志文件输出的文件名 -->
+            <fileNamePattern>${LOG_HOME}/${APP_NAME}-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+            <!-- 日志文件保留天数 -->
+            <maxHistory>365</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <!-- springboot logback配置 -->
+    <!--
+    <appender name="DEBUG_LEVEL_REMAPPER" class="org.springframework.boot.logging.logback.LevelRemappingAppender">
+        <destinationLogger>org.springframework.boot</destinationLogger>
+    </appender>
+
+    <logger name="org.apache.catalina.startup.DigesterFactory" level="ERROR"/>
+    <logger name="org.apache.catalina.util.LifecycleBase" level="ERROR"/>
+    <logger name="org.apache.coyote.http11.Http11NioProtocol" level="WARN"/>
+    <logger name="org.apache.sshd.common.util.SecurityUtils" level="WARN"/>
+    <logger name="org.apache.tomcat.util.net.NioSelectorPool" level="WARN"/>
+    <logger name="org.crsh.plugin" level="WARN"/>
+    <logger name="org.crsh.ssh" level="WARN"/>
+    <logger name="org.eclipse.jetty.util.component.AbstractLifeCycle" level="ERROR"/>
+    <logger name="org.hibernate.validator.internal.util.Version" level="WARN"/>
+    <logger name="org.springframework.boot.actuate.autoconfigure.CrshAutoConfiguration" level="WARN"/>
+    <logger name="org.springframework.boot.actuate.endpoint.jmx" additivity="false">
+        <appender-ref ref="DEBUG_LEVEL_REMAPPER"/>
+    </logger>
+    <logger name="org.thymeleaf" additivity="false">
+        <appender-ref ref="DEBUG_LEVEL_REMAPPER"/>
+    </logger>
+    -->
+
+    <!--
+    子节点<logger> 用来设置某一个包或具体的某一个类的日志打印级别、以及指定<appender>。
+    <logger>仅有一个name属性，一个可选的level和一个可选的additivity属性。可以包含零个或多个<appender-ref>元素，标识这个appender将会添加到这个logger
+        name        用来指定受此logger约束的某一个包或者具体的某一个类。
+        level       用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL和OFF，还有一个特殊值INHERITED或者同义词NULL，代表强制执行上级的级别。如果未设置此属性，那么当前logger将会继承上级的级别。
+        additivity  是否向上级logger传递打印信息。默认是true。同<logger>一样，可以包含零个或多个<appender-ref>元素，标识这个appender将会添加到这个logger。
+    -->
+    <logger name="com.onevgo" level="DEBUG"/>
+
+    <!--
+    子节点<root> 它也是<logger>元素，但是它是根logger,是所有<logger>的上级。只有一个level属性，因为name已经被命名为"root",且已经是最上级了。
+        level       用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL和OFF，不能设置为INHERITED或者同义词NULL。默认是DEBUG。
+    -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration> 

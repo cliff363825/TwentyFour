@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!--
+    targetRuntime
+        1. MyBatis3Simple 生成简单版的CRUD
+        2. MyBatis3 豪华版
+    -->
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+        <commentGenerator>
+            <property name="suppressAllComments" value="false"/>
+            <property name="suppressDate" value="true"/>
+            <property name="addRemarkComments" value="true"/>
+        </commentGenerator>
+
+        <!-- jdbcConnection 指定如何连接到目标数据库 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/default"
+                        userId="root"
+                        password="root">
+        </jdbcConnection>
+
+        <!-- 配置类型解析器 -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!--
+        配置 javaModelGenerator 生成器 - Model
+            1. targetPackage="com.onevgo.mybatis.bean" 目标包名
+            2. targetProject="src/main/java" 目标工程
+        -->
+        <javaModelGenerator targetPackage="com.onevgo.mybatis.mbg.bean" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- 配置 sqlMapGenerator 生成器 - Mapper.xml -->
+        <sqlMapGenerator targetPackage="com.onevgo.mybatis.mbg.dao" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <!-- 配置 javaClientGenerator 生成器 - DAO -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.onevgo.mybatis.mbg.dao" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!-- 配置需要逆向工程的表，生成JavaBean -->
+        <table tableName="tbl_dept" domainObjectName="Department"></table>
+        <table tableName="tbl_employee" domainObjectName="Employee"></table>
+    </context>
+</generatorConfiguration>

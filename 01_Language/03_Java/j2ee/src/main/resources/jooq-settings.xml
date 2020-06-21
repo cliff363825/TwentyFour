@@ -1,0 +1,14 @@
+<settings xmlns="http://www.jooq.org/xsd/jooq-runtime-3.9.0.xsd">
+    <!--<renderCatalog>false</renderCatalog>-->
+    <!--<renderSchema>false</renderSchema>-->
+    <!--<renderNameStyle>AS_IS</renderNameStyle>-->
+    <!--<renderKeywordStyle>UPPER</renderKeywordStyle>-->
+    <!--<paramType>NAMED</paramType>-->
+    <!--<statementType>STATIC_STATEMENT</statementType>-->
+    <!--<executeLogging>false</executeLogging>-->
+    <!--<attachRecords>false</attachRecords>-->
+    <!--<queryTimeout>5</queryTimeout>-->
+    <!--<maxRows>1000</maxRows>-->
+    <!--<fetchSize>20</fetchSize>-->
+    <!--<inListPadding>true</inListPadding>-->
+</settings>

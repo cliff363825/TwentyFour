@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration xmlns="http://www.jooq.org/xsd/jooq-codegen-3.9.2.xsd">
+    <!-- 配置数据库连接 -->
+    <jdbc>
+        <driver>com.mysql.jdbc.Driver</driver>
+        <url>jdbc:mysql://localhost:3306/default</url>
+        <user>root</user>
+        <password>root</password>
+    </jdbc>
+
+    <generator>
+        <!--
+        配置代码生成器
+        1. org.jooq.util.JavaGenerator: 默认
+        2. org.jooq.util.ScalaGenerator
+        -->
+        <name>org.jooq.util.JavaGenerator</name>
+
+        <database>
+            <!--
+            配置数据库类型
+            org.jooq.util.[database].[database]Database
+            -->
+            <name>org.jooq.util.mysql.MySQLDatabase</name>
+
+            <!--
+            catalog.schema.table
+            Mysql数据库配置数据库名
+            -->
+            <inputSchema>default</inputSchema>
+
+            <!-- 配置要生成的表 -->
+            <!--<includes>.*</includes>-->
+            <includes>employee|department</includes>
+
+            <!-- 配置不需要生成的表，excludes优先级高于includes -->
+            <excludes></excludes>
+        </database>
+
+        <target>
+            <!-- 生成类的目标包(在目标目录中) -->
+            <packageName>com.onevgo.jooq</packageName>
+
+            <!-- 生成类的目标目录。这里使用Maven目录布局 -->
+            <directory>/Users/songhongfa/git/my_java/j2ee/src/main/java</directory>
+        </target>
+    </generator>
+
+    <!--
+    代码生成命令行
+    java -classpath jooq-3.9.6.jar:jooq-meta-3.9.6.jar:jooq-codegen-3.9.6.jar:mysql-connector-java-5.1.18-bin.jar:. org.jooq.util.GenerationTool library.xml
+    -->
+</configuration>

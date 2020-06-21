@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--
+    通过 FactoryBean 来配置 Bean 的实例
+        class: 指向 FactoryBean 的全类名
+        property: 配置 FactoryBean 的属性
+
+    但实际返回的实例却是 FactoryBean 的 getObject() 方法返回的实例！
+    -->
+    <bean id="car" class="com.onevgo.spring.beans.factorybean.CarFactoryBean">
+        <property name="brand" value="BMW"></property>
+    </bean>
+
+</beans>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="address" class="com.onevgo.spring.beans.autowired.Address"
+          p:city="Beijing" p:street="HuiLongGuan"></bean>
+
+    <bean id="address2" class="com.onevgo.spring.beans.autowired.Address"
+          p:city="Beijing" p:street="HuiLongGuan"></bean>
+
+    <bean id="car" class="com.onevgo.spring.beans.autowired.Car"
+          p:brand="Audi" p:price="300000"></bean>
+
+    <!--
+    可以使用 autowire 属性指定自动装配的方式，
+        1. byName 根据 bean 的名字和当前 bean 的 setter 风格的属性名进行自动装配，若有匹配的，则进行自动装配，若没有匹配的，则不装配
+        2. byType 根据 bean 的类型和当前 bean 的属性的类型进行自动装配。若 IOC 容器中有1个以上的类型匹配，则抛异常。
+    -->
+    <bean id="person" class="com.onevgo.spring.beans.autowired.Person"
+          p:name="Tom" autowire="byName"></bean>
+    <!--
+    <bean id="person" class="com.onevgo.spring.beans.autowired.Person"
+          p:name="Tom" autowire="byType"></bean>
+    -->
+</beans>

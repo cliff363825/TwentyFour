@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--
+    使用 bean 的 scope 属性来配置 bean 的作用域
+        singleton: 默认值。容器初始时创建 bean 实例。在整个容器的生命周期内只创建这一个 bean。饿汉式单例。
+        prototype: 原型的。容器初始化时不创建 bean 的实例。而在每次请求时都创建一个新的 bean 实例，并返回。
+    -->
+    <bean id="car" class="com.onevgo.spring.beans.scope.Car" scope="singleton">
+        <property name="brand" value="Audi"></property>
+        <property name="price" value="300000"></property>
+    </bean>
+
+    <bean id="car2" class="com.onevgo.spring.beans.scope.Car" scope="prototype">
+        <property name="brand" value="BMW"></property>
+        <property name="price" value="200000"></property>
+    </bean>
+
+</beans>

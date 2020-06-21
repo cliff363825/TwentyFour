@@ -1,0 +1,3 @@
+# Initializers
+org.springframework.context.ApplicationContextInitializer=\
+  com.onevgo.springboot.component.MyApplicationContextInitializer

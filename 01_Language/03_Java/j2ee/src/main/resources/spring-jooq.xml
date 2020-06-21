@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="classpath:/db.properties"/>
+
+    <!-- 配置数据源 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="url" value="${jdbc.jdbcUrl}"/>
+        <property name="username" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="driverClassName" value="${jdbc.driverClass}"/>
+        <property name="initialSize" value="${jdbc.initPoolSize}"/>
+        <property name="maxActive" value="${jdbc.maxPoolSize}"/>
+    </bean>
+
+    <!-- 配置Spring的事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 开启基于注解的事务管理器 @Transactional -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- 配置jOOQ的ConnectionProvider来使用Spring的TransactionAwareDataSourceProxy，它可以动态地发现事务上下文 -->
+    <bean id="transactionAwareDataSource" class="org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy">
+        <constructor-arg index="0" ref="dataSource"/>
+    </bean>
+
+    <bean id="connectionProvider" class="org.jooq.impl.DataSourceConnectionProvider">
+        <constructor-arg index="0" ref="transactionAwareDataSource"/>
+    </bean>
+
+    <bean id="exceptionTranslator" class="org.jooq.example.spring.exception.ExceptionTranslator"/>
+
+    <bean id="configuration" class="org.jooq.impl.DefaultConfiguration">
+        <property name="SQLDialect" value="MYSQL"/>
+        <property name="connectionProvider" ref="connectionProvider"/>
+        <property name="executeListenerProvider">
+            <array>
+                <bean class="org.jooq.impl.DefaultExecuteListenerProvider">
+                    <constructor-arg index="0" ref="exceptionTranslator"/>
+                </bean>
+            </array>
+        </property>
+    </bean>
+
+    <!-- 配置DSL对象，可以选择使用Spring异常覆盖jOOQ异常 -->
+    <bean id="dsl" class="org.jooq.impl.DefaultDSLContext">
+        <constructor-arg index="0" ref="configuration"/>
+    </bean>
+
+    <bean id="employeeService" class="com.onevgo.jooq.service.EmployeeService"/>
+</beans>

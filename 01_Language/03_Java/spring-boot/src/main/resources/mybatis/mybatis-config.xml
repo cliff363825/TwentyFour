@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <!--
+        配置 MyBatis 设置项
+        1. setting 用来配置每一个设置项
+        2. name 设置项名
+        3. value 设置项取值
+    -->
+    <settings>
+        <!-- 配置数据库字段下划线转驼峰 last_name => lastName -->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!-- 配置 MyBatis 对 null 在不同数据库厂商中的处理，默认是 OTHER -->
+        <setting name="jdbcTypeForNull" value="NULL"/>
+
+        <!-- 显示的指定每个我们需要更改的配置的值，即使他是默认的。防止版本更新带来的问题 -->
+        <setting name="cacheEnabled" value="true"/>
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
+    </settings>
+
+    <!-- 配置插件 -->
+    <!--<plugins>-->
+        <!--<plugin interceptor="com.github.pagehelper.PageInterceptor"></plugin>-->
+    <!--</plugins>-->
+
+    <!--
+        配置多数据库厂商支持
+        1. type="DB_VENDOR" org.apache.ibatis.mapping.VendorDatabaseIdProvider
+        2. 作用就是得到数据库厂商的标识（驱动 getDatabaseProductName()），mybatis 就是根据数据库厂商标识来执行不同的sql
+        3. MySQL, Oracle, SQL Server,xxx
+    -->
+    <databaseIdProvider type="DB_VENDOR">
+        <!-- 为不同的数据库厂商起别名 -->
+        <property name="MySQL" value="mysql"></property>
+        <property name="Oracle" value="oracle"></property>
+        <property name="SQL Server" value="sqlserver"></property>
+    </databaseIdProvider>
+</configuration>

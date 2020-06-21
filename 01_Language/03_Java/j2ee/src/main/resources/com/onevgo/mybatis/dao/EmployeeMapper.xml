@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 配置 mapper 命名空间，若使用接口绑定，则需要指定为接口的全类名 -->
+<mapper namespace="com.onevgo.mybatis.dao.EmployeeMapper">
+    <!--
+        配置二级缓存
+        1. eviction 缓存回收策略
+            1. LRU 最近最少使用的:移除最长时间不被使用的对象。
+            2. FIFO 先进先出:按对象进入缓存的顺序来移除它们。
+            3. SOFT 软引用:移除基于垃圾回收器状态和软引用规则的对象。
+            4. WEAK 弱引用:更积极地移除基于垃圾收集器状态和弱引用规则的对象。
+            5. 默认的是 LRU。
+        2. flushInterval 缓存刷新间隔
+            1. 缓存多长时间清空一次，默认不清空，设置一个毫秒值
+        3. readOnly 是否支付
+            1. true 只读，mybatis 认为所有从缓冲中获取数据的操作都是只读操作，不会修改数据
+                    mybatis 为了加快获取速度，直接就会将数据从缓存中的引用交给用户。不安全，速度快
+            2. false 非只读，mybatis 觉得获取的数据可能会被修改。
+                    mybatis 会利用序列化&反序列的技术克隆一份新的数据给你。安全，速度慢
+        4. 缓存存放多少元素
+        5. type 指定自定义缓存的全类名，实现org.apache.ibatis.cache.Cache接口即可
+    -->
+    <!--
+    <cache eviction="FIFO" flushInterval="60000" readOnly="false" size="1024"></cache>
+    -->
+    <!-- 配置 ehcache 缓存 -->
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"></cache>
+
+    <!--
+        配置 select 查询语句
+        1. id select语句标识，若使用接口绑定，则需要指定为接口方法名
+        2. resultType 结果类型
+            1. JavaBean全类名
+            2. map
+    -->
+    <select id="getById" resultType="com.onevgo.mybatis.bean.Employee">
+        SELECT id, last_name lastName, email, gender
+        FROM tbl_employee
+        WHERE id = #{id}
+    </select>
+
+    <!-- 3. databaseId 指定数据库id -->
+    <!--
+    <select id="getEmpById" resultType="com.onevgo.mybatis.bean.Employee" databaseId="mysql">
+        select id, last_name lastName, email, gender from tbl_employee where id = #{id}
+    </select>
+    <select id="getEmpById" resultType="com.onevgo.mybatis.bean.Employee" databaseId="oracle">
+        SELECT
+            EMPLOYEE_ID id,
+            LAST_NAME   lastName,
+            Email       email
+        FROM employees
+        WHERE EMPLOYEE_ID = #{id}
+    </select>
+    -->
+
+    <!-- 4. resultMap 使用自定义结果映射 -->
+    <!-- 配置 resultMap 结果映射规则，数据库字段和 JavaBean 属性的映射关系 -->
+    <resultMap id="MyEmp" type="com.onevgo.mybatis.bean.Employee">
+        <!-- 配置主键映射，column 数据库列，property JavaBean属性 -->
+        <id column="id" property="id"/>
+        <!-- 配置其他列映射 -->
+        <result column="last_name" property="lastName"/>
+        <result column="email" property="email"/>
+        <result column="gender" property="gender"/>
+        <result column="emp_status" property="empStatus"
+                typeHandler="com.onevgo.mybatis.typehandler.MyEnumEmpStatusTypeHandler"/>
+    </resultMap>
+    <select id="getEmpById" resultMap="MyEmp" databaseId="mysql">
+        SELECT *
+        FROM tbl_employee
+        WHERE id = #{id}
+    </select>
+
+    <!-- 配置多个参数占位符 @Param("id") => #{id}, @Param("lastName") => #{lastName} -->
+    <select id="getEmpByIdAndLastName" resultType="com.onevgo.mybatis.bean.Employee">
+        SELECT *
+        FROM tbl_employee
+        WHERE id = #{id}
+          AND last_name = #{lastName}
+    </select>
+
+    <!-- 配置List类型参数占位符 -->
+    <select id="getEmpByIds" resultType="com.onevgo.mybatis.bean.Employee">
+        SELECT id, last_name lastName, email, gender
+        FROM tbl_employee
+        WHERE id = #{param1[0]}
+          AND last_name LIKE #{param2}
+    </select>
+
+    <!-- ${...} 直接获取值，#{...} 占位符，预处理绑定值 -->
+    <select id="getEmpByMap" resultType="com.onevgo.mybatis.bean.Employee">
+        SELECT *
+        FROM ${tableName}
+        WHERE id = #{id}
+          AND last_name = #{lastName}
+    </select>
+
+    <!-- 配置返回集合类型 List<Employee>，resultType 要写集合中元素的类型 -->
+    <select id="getEmpsByLastNameLike" resultType="com.onevgo.mybatis.bean.Employee">
+        SELECT *
+        FROM tbl_employee
+        WHERE last_name LIKE #{param1}
+    </select>
+
+    <!-- 配置返回map类型 Map<String, Object> -->
+    <select id="getEmpByIdReturnMap" resultType="map">
+        SELECT *
+        FROM tbl_employee
+        WHERE id = #{id}
+    </select>
+
+    <!-- 配置返回map类型 Map<Integer, Employee>，@MapKey("id") -->
+    <select id="getEmpsByLastNameLikeReturnMap" resultType="com.onevgo.mybatis.bean.Employee">
+        SELECT *
+        FROM tbl_employee
+        WHERE last_name LIKE #{lastName}
+    </select>
+
+    <!-- 联合查询：级联属性封装结果集 -->
+    <resultMap id="MydDifEmp" type="com.onevgo.mybatis.bean.Employee">
+        <id column="id" property="id"/>
+        <result column="last_name" property="lastName"/>
+        <result column="gender" property="gender"/>
+        <result column="did" property="dept.id"/>
+        <result column="dept_name" property="dept.departmentName"/>
+    </resultMap>
+    <!-- 使用 association 定义关联的单个对象的封装规则 -->
+    <resultMap id="MydDifEmp2" type="com.onevgo.mybatis.bean.Employee">
+        <id column="id" property="id"/>
+        <result column="last_name" property="lastName"/>
+        <result column="gender" property="gender"/>
+        <!--
+            association 可以指定联合的 JavaBean 对象
+            1. property="dept" 指定哪个属性是联合的对象
+            2. javaType 指定这个属性对象的类型（不能省略）
+        -->
+        <association property="dept" javaType="com.onevgo.mybatis.bean.Department">
+            <id column="did" property="id"/>
+            <result column="dept_name" property="departmentName"/>
+        </association>
+    </resultMap>
+    <select id="getEmpAndDept" resultMap="MydDifEmp2">
+        SELECT e.id, e.last_name, e.gender, d.id AS did, d.dept_name
+        FROM tbl_employee e
+                 INNER JOIN tbl_dept d ON e.d_id = d.id
+        WHERE e.id = #{id}
+    </select>
+
+    <!--
+        使用 association 进行分步查询
+        1. 先按照员工id查询员工信息
+        2. 根据查询员工信息中的d_id值区部门表查出部门信息
+        3. 部门设置到员工中
+
+        可以使用延迟加载（懒加载）：（按需加载）
+        Employee ==> Dept
+            我们每次查询 Employee 对象的时候，都将一起查询出来
+            部门信息在我们使用的时候去查询
+            分段查询的基础之上加上两个配置
+    -->
+    <resultMap id="MyEmpByStep" type="com.onevgo.mybatis.bean.Employee">
+        <id column="id" property="id"/>
+        <result column="last_name" property="lastName"/>
+        <result column="email" property="email"/>
+        <result column="gender" property="gender"/>
+        <!--
+            association 定义关联对象的封装规则
+            1. select 表明当前属性是调用 select 指定的方法查出的结果
+            2. column 指定将哪一列的值传给这个方法
+                1. column="d_id" 传递单列的值
+                2. column="{param1=column1, param2=column2}" 传递多列的值
+
+            流程
+            1. 使用select指定的方法（传入column指定的这列参数的值）查出对象
+            2. 并封装给property指定的属性
+        -->
+        <association property="dept" select="com.onevgo.mybatis.dao.DepartmentMapper.getDeptById"
+                     column="d_id"></association>
+    </resultMap>
+    <select id="getEmpByIdStep" resultMap="MyEmpByStep">
+        SELECT *
+        FROM tbl_employee
+        WHERE id = #{id}
+    </select>
+
+    <!-- 根据部门id获取员工列表 -->
+    <select id="getEmpsByDeptId" resultType="com.onevgo.mybatis.bean.Employee">
+        SELECT id, last_name AS lastName, email, gender
+        FROM tbl_employee
+        WHERE d_id = #{deptId}
+    </select>
+
+    <!--
+        配置 discriminator 鉴别器
+        1. mybatis可以使用 discriminator 判断某列的值
+        2. 然后根据某列的值改变封装行为封装 Employee
+    -->
+    <resultMap id="MyEmpDiscriminator" type="com.onevgo.mybatis.bean.Employee">
+        <id column="id" property="id"/>
+        <result column="last_name" property="lastName"/>
+        <result column="email" property="email"/>
+        <result column="gender" property="gender"/>
+        <!--
+            column 指定判定的列名
+            javaType 列值对应的java类型
+        -->
+        <discriminator column="gender" javaType="java.lang.String">
+            <!-- resultType 指定封装的结果类型 -->
+            <case value="0" resultType="com.onevgo.mybatis.bean.Employee">
+                <association property="dept" select="com.onevgo.mybatis.dao.DepartmentMapper.getDeptById"
+                             column="{id=d_id}"></association>
+            </case>
+            <case value="1" resultType="com.onevgo.mybatis.bean.Employee">
+                <result column="last_name" property="email"/>
+            </case>
+        </discriminator>
+    </resultMap>
+    <select id="getEmpByIdDis" resultMap="MyEmpDiscriminator">
+        SELECT *
+        FROM tbl_employee
+        WHERE id = #{id}
+    </select>
+
+    <!--
+        if 判断
+        1. 从参数中取值进行判断
+        2. 遇见特殊符号应该去写转义字符
+            1. && &amp;&amp;
+        3. 查询的时候如果某些条件没带可能sql拼装会有问题
+            1. 给 where 后面加上 1=1，以后的条件都 and xxx
+            2. mybatis 使用 where 标签来将所有的查询条件包括在内。
+                1. mybatis 就会将 where 标签中拼装的sql，多出来的and或者or去掉
+                2. where 只会去掉第一个多出来的 and 或者 or
+    -->
+    <select id="getEmpsByConditionIf" resultType="com.onevgo.mybatis.bean.Employee">
+        select * from tbl_employee
+        <!-- where 1=1 -->
+        <where>
+            <if test="id != null">
+                id=#{id}
+            </if>
+            <if test="lastName != null and lastName != ''">
+                and last_name like #{lastName}
+            </if>
+            <if test="email != null and email.trim() != ''">
+                and gender=#{gender}
+            </if>
+            <!-- ognl会进行字符串与数字的转换 "0"==0 -->
+            <if test="gender==0 or gender == 1">
+                and gender=#{gender}
+            </if>
+        </where>
+    </select>
+
+    <!--
+        trim 自定义字符串的截取规则
+        1. prefix="" 前缀，trim标签体中是整个字符串拼串后的结果，prefix给拼串后的整个字符串加一个前缀
+        2. prefixOverrides="" 前缀覆盖，去掉整个字符串前面多余的字符
+        3. suffix="" 后缀，suffix给拼串后的整个字符串加一个后缀
+        4. suffixOverrides="" 后缀覆盖，去掉整个字符串后面多余的字符
+    -->
+    <select id="getEmpsByConditionTrim" resultType="com.onevgo.mybatis.bean.Employee">
+        select * from tbl_employee
+        <!-- 后面多出的 and 或者 or where 标签不能解决 -->
+        <trim prefix="where" suffixOverrides="and">
+            <if test="id != null">
+                id=#{id} and
+            </if>
+            <if test="lastName != null and lastName != ''">
+                last_name like #{lastName} and
+            </if>
+            <if test="email != null and email.trim() != ''">
+                gender=#{gender} and
+            </if>
+            <!-- ognl会进行字符串与数字的转换 "0"==0 -->
+            <if test="gender==0 or gender == 1">
+                gender=#{gender}
+            </if>
+        </trim>
+    </select>
+
+    <!-- choose(when, otherwise) 分支选择，带了break的switch-case -->
+    <select id="getEmpsByConditionChoose" resultType="com.onevgo.mybatis.bean.Employee">
+        select * from tbl_employee
+        <where>
+            <choose>
+                <when test="id != null">
+                    id = #{id}
+                </when>
+                <when test="lastName != null">
+                    last_name like #{lastName}
+                </when>
+                <when test="email != null">
+                    email = #{email}
+                </when>
+                <otherwise>
+                    1=1
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+    <!--
+        collection 指定要遍历的集合
+        1. list类型的参数会特殊处理封装在map中，map的key就叫list
+        2. item 将当前遍历出的元素赋值给指定的变量
+        3. separator 每个元素之间的分隔符
+        4. open 遍历出所有结果拼装一个开始的字符
+        5. close 遍历出所有结果拼装一个结束的字符
+        6. index 索引，遍历list的时候是索引，遍历map的时候index表示的就是map的key，item就是map的值
+        #{变量名}就能取出变量的值也就是当前遍历出的元素
+    -->
+    <select id="getEmpsByConditionForeach" resultType="com.onevgo.mybatis.bean.Employee">
+        select * from tbl_employee
+        <where>
+            <choose>
+                <when test="list != null and list.size() > 0">
+                    id in
+                    <foreach collection="list" item="item_id" open="(" separator="," close=")" index="i">
+                        #{item_id}
+                    </foreach>
+                </when>
+                <otherwise>
+                    0=1
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+    <!--
+        两个内置参数
+        1. 不只是方法传递过来的参数可以被用来判断，取值
+        2. mybatis 默认还有两个内置参数
+            1. _parameter 代表整个参数
+                1. 单个参数 _parameter 就是这个参数
+                2. 多个参数 参数会被封装为一个map _parameter就是代表这个map
+            2. _databaseId 如果配置了 databaseIdProvider 标签
+                1. _databaseId 就是代表当前数据库的别名 oracle
+    -->
+    <select id="getEmpsByInnerParameter" resultType="com.onevgo.mybatis.bean.Employee">
+        <!-- bind 可以将OGNL表达式的值绑定到一个变量中，方便后来引用这个变量的值 -->
+        <bind name="_lastName" value="'%' + lastName + '%'"/>
+        <if test="_databaseId == 'mysql'">
+            select * from tbl_employee
+            <if test="_parameter != null">
+                where last_name like #{lastName}
+            </if>
+        </if>
+        <if test="_databaseId == 'oracle'">
+            select * from employees
+            <if test="_parameter != null">
+                where last_name like #{_parameter.lastName}
+            </if>
+        </if>
+    </select>
+
+    <select id="getEmps" resultType="com.onevgo.mybatis.bean.Employee">
+        select *
+        from tbl_employee
+    </select>
+
+    <!--
+        配置存储过程
+        1. 使用 select 标签定义调用存储过程
+        2. statementType="CALLABLE" 表示要调用存储过程
+        3. {call procedure_name(params)}
+    -->
+    <resultMap id="PageEmp" type="com.onevgo.mybatis.bean.Employee">
+        <id column="EMPLOYEE_ID" property="id"/>
+        <result column="LAST_NAME" property="lastName"/>
+        <result column="EMAIL" property="email"/>
+    </resultMap>
+    <select id="getPageByProcedure" statementType="CALLABLE" databaseId="oracle">
+        {call hello_test(
+                #{start,mode=IN,jdbcType=INTEGER},
+                #{end,mode=IN,jdbcType=INTEGER},
+                #{count,mode=OUT,jdbcType=INTEGER},
+                #{emps,mode=OUT,jdbcType=CURSOR,javaType=ResultSet,resultMap=PageEmp}
+        )}
+    </select>
+
+    <!--
+        配置 insert 插入语句
+        1. parameterType 参数类型，可以省略
+        2. 获取自增主键的值：
+            1. mysql 支持自增主键，自增主键值的获取，mybatis也是利用 statement.getGeneratedKeys();
+            2. useGeneratedKeys="true": 使用自增主键获取主键值策略
+            3. keyProperty: 指定对应的主键属性，也就是 mybatis 获取到主键值以后，将这个值封装给 javaBean 的哪个属性
+    -->
+    <insert id="addEmp" parameterType="com.onevgo.mybatis.bean.Employee"
+            useGeneratedKeys="true" keyProperty="id" databaseId="mysql">
+        INSERT INTO tbl_employee (last_name, email, gender, emp_status)
+        VALUES (#{lastName},
+                #{email},
+                #{gender},
+                #{empStatus,typeHandler=com.onevgo.mybatis.typehandler.MyEnumEmpStatusTypeHandler})
+    </insert>
+
+    <!--
+        Oracle 不支持自增：Oracle 使用序列来模拟自增
+        每次插入的数据的主键是从序列中拿到的值，如何获取到这个值？
+    -->
+    <insert id="addEmp" parameterType="com.onevgo.mybatis.bean.Employee" databaseId="oracle">
+        <!--
+            配置 selectKey 获取序列自增值
+            1. keyProperty 查出的主键值封装给 javaBean 的哪个属性
+            2. order
+                1. BEFORE 当前sql在插入sql之前运行
+                2. After  当前sql在插入sql之后运行
+            3. resultType 查出的数据的返回值类型
+            4. BEFORE 运行顺序：
+                1. 先运行 selectKey 查询 id 的sql：查询 id 值封装给javaBean 的id 属性
+                2. 在运行插入的sql，就可以取出id属性对应的值
+            5. AFTER 运行顺序：
+                1. 先运行插入的sql，(从序列中取出新值作为 id)
+                2. 在运行 selectKey 查询id 的sql
+        -->
+        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
+            <!-- 编写查询主键的 sql 语句 -->
+            select EMPLOYEE_SEQ.nextval from dual
+        </selectKey>
+        <!-- 插入时的主键是从序列中拿到的 -->
+        insert into employees(EMPLOYEE_ID, LAST_NAME, EMAIL) values (#{id}, #{lastName}, #{email,jdbcType=NULL})
+        <!--
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            select EMPLOYEE_SEQ.currval from dual
+        </selectKey>
+        insert into employees(EMPLOYEE_ID, LAST_NAME, EMAIL) values (employees_sql.nextval, #{lastName}, #{email})
+        -->
+    </insert>
+
+    <!--
+        批量保存
+        MySQL下批量保存 可以 foreach 遍历 mysql 支持 values(),(),() 语法
+    -->
+    <insert id="addEmps" databaseId="mysql">
+        insert into tbl_employee(
+        <include refid="insertColumn"></include>
+        ) VALUES
+        <foreach collection="list" separator="," item="emp">
+            (#{emp.lastName}, #{emp.gender}, #{emp.email}, #{emp.dept.id})
+        </foreach>
+    </insert>
+    <!-- 这种模式需要数据库连接属性 allowMultiQueries=true，这种分号分隔多个sql可以用于其他的批量操作（删除，修改） -->
+    <!--
+    <insert id="addEmps">
+        <foreach collection="list" separator=";" item="emp">
+        insert into tbl_employee(last_name, gender, email, d_id) VALUES
+            (#{emp.lastName}, #{emp.gender}, #{emp.email}, #{emp.dept.id})
+        </foreach>
+    </insert>
+    -->
+    <!--
+        Oracle数据库批量保存
+        1. Oracle 不支持 values(),(),()
+        2. Oracle 支持的批量方式
+            1. 多个 insert 放在 begin - end 里面
+                begin
+                    insert into employees(employee_id,last_name,email) values (employee_sql.nextval,'test_001','test_001@onevgo.com');
+                    insert into employees(employee_id,last_name,email) values (employee_sql.nextval,'test_002','test_002@onevgo.com');
+                end;
+            2. 中间表
+                insert into employees(employee_id,last_name,email)
+                    select employee_seq.nextval,lastName,email from (
+                        select 'test_a_01' lastName, 'test_a_e01' email from dual
+                        union
+                        select 'test_a_02' lastName, 'test_a_e02' email from dual
+                        union
+                        select 'test_a_03' lastName, 'test_a_e03' email from dual
+                    )
+    -->
+    <insert id="addEmps" databaseId="oracle">
+        <!-- oracle 第一种批量方式 -->
+        <foreach collection="list" item="emp" separator=";" open="begin" close="end;">
+            insert into employees(employee_id,last_name,email) values
+            (employee_sql.nextval,'test_001','test_001@onevgo.com')
+        </foreach>
+
+        <!-- oracle 第二种批量方式 -->
+        insert into employees(
+        <!-- 引用外部定义的sql -->
+        <include refid="insertColumn"></include>
+        ) select employee_seq.nextval,lastName,email from (
+        <foreach collection="emps" item="emp" separator="union">
+            select #{emp.lastName} as lastName, #{emp.email} as email from dual
+        </foreach>
+        )
+    </insert>
+
+    <!--
+        抽取可重用的sql片段，方便后面引用
+        1. sql抽取，经常将要查询的列名，或者插入用的列名抽取出来方便引用
+        2. include 来引用已经抽取的sql
+        3. include 还可以自定义一些 property，sql标签内部就能使用自定义的属性
+            1. 取值的正确方式 ${property}，不能使用 #{property}
+    -->
+    <sql id="insertColumn">
+        <if test="_databaseId == 'oracle'">
+            employee_id, last_name, email
+        </if>
+        <if test="_databaseId == 'mysql'">
+            last_name,gender,email,d_id
+        </if>
+    </sql>
+
+    <!-- 配置 update 更新语句 -->
+    <update id="updateEmp">
+        UPDATE tbl_employee
+        SET last_name = #{lastName},
+            email     = #{email},
+            gender    = #{gender}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateEmpBySet">
+        update tbl_employee
+        <set>
+            <if test="lastName != null">
+                last_name = #{lastName},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="updateEmpByTrim">
+        update tbl_employee
+        <trim prefix="set" suffixOverrides=",">
+            <if test="lastName != null">
+                last_name = #{lastName},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="gender != null">
+                gender = #{gender}
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!-- 配置 delete 删除语句 -->
+    <delete id="deleteEmpById">
+        DELETE
+        FROM tbl_employee
+        WHERE id = #{id}
+    </delete>
+</mapper>
