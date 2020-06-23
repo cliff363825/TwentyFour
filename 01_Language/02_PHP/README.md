@@ -29,3 +29,4 @@
    composer update --lock
    ```
 
+2. [PHP Session Locking How To Prevent Sessions Blocking in PHP requests](./docs/PHP-Session-Lock.md)
