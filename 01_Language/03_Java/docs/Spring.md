@@ -1,4 +1,4 @@
-# 好脑子不如烂笔头系列之java - SPRING
+# Java篇之Spring
 ##搭建 Spring 开发环境
 
 1. 把以下 jar 包加入到工程的 classpath 下:
@@ -317,7 +317,7 @@
         6. `<context:component-scan>` 下可以拥有若干个 `<context:include-filter>` 和 `<context:exclude-filter>` 子节点
         
         7. `<context:include-filter>` 和 `<context:exclude-filter>` 子节点支持多种类型的过滤表达式：
-            
+          
             | 类别       | 示例                    | 说明                                                         |
             | ---------- | ----------------------- | ------------------------------------------------------------ |
             | annotation | com.onevgo.MyAnnotation | 所有标注了 @MyAnnotation 的类。该类型采用目标类是否标注某个注解进行过滤 |
@@ -347,7 +347,7 @@
     1. Spring 允许通过 `<import>` 将多个配置文件引入到一个文件中，进行配置文件的集成。这样在启动 Spring 容器时，仅需要指定这个合并好的配置文件就可以。
     
     2. import 元素的 resource 属性支持 Spring 的标准的路径资源
-        
+      
         | 地址前缀   | 示例                                     | 对应资源类型                                           |
         | ---------- | ---------------------------------------- | ------------------------------------------------------ |
         | classpath: | classpath:spring-mvc.xml                 | 从类路径下加载资源，classpath: 和 classpath:/ 是等价的 |
