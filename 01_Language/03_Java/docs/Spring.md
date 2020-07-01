@@ -1,5 +1,5 @@
 # Java篇之Spring
-##搭建 Spring 开发环境
+## 搭建 Spring 开发环境
 
 1. 把以下 jar 包加入到工程的 classpath 下:
     1. commons-logging-xxx.jar
@@ -9,7 +9,7 @@
     5. spring-expression-xxx.jar
 2. Spring 的配置文件: 一个典型的 Spring 项目需要创建一个或多个 Bean 配置文件, 这些配置文件用于在 Spring IOC 容器里配置 Bean. Bean 的配置文件可以放在 classpath 下, 也可以放在其它目录下.
 
-##Spring 中的 Bean 配置
+## Spring 中的 Bean 配置
 
 1. 内容提要
     1. IOC & DI 概述
@@ -355,7 +355,7 @@
         | http://    | http://www.onevgo.com/resource/beans.xml | 从 WEB 服务器中加载资源                                |
         | ftp://     | ftp://www.onevgo.com/resource/beans.xml  | 从 FTP 服务器中加载资源                                |
 
-##Spring AOP
+## Spring AOP
 
 1. AOP 简介
     1. AOP(Aspect-Oriented Programming, 面向切面编程): 是一种新的方法论, 是对传统 OOP(Object-Oriented Programming, 面向对象编程) 的补充.
@@ -488,7 +488,7 @@
         </aop:config>
         ```
 
-##Spring 对 JDBC 的支持
+## Spring 对 JDBC 的支持
 
 1. 使用 JdbcTemplate 更新数据库
     1. 用 sql 语句和参数更新数据库: `public int update(String sql, Object... args)`
@@ -516,7 +516,7 @@
         3. public int[] batchUpdate(String sql, Map[] batchValues)
         4. public int[] batchUpdate(String sql, SqlParameterSource[] batchArgs)
 
-##Spring中的事务管理
+## Spring中的事务管理
 
 1. 事务简介
     1. 事务管理是企业级应用程序开发中必不可少的技术,  用来确保数据的完整性和一致性. 
@@ -672,7 +672,7 @@
     1. 超时和只读属性可以在 @Transactional 注解中定义.超时属性以秒为单位来计算.
     2. 在 Spring 2.x 事务通知中, 超时和只读属性可以在 `<tx:method>` 元素中进行指定.
 
-##Spring  整合 Hibernate
+## Spring  整合 Hibernate
 
 1. Spring 整合 Hibernate
     1. Spring 支持大多数流行的 ORM 框架, 包括 Hibernate JDO, TopLink, Ibatis 和 JPA。
@@ -799,7 +799,7 @@
             <property name="hibernate.current_session_context_class">thread</property>
             ```
 
-##Spring  整合 Struts1.x
+## Spring  整合 Struts1.x
 
 1. 在通用的 web 应用中访问 Spring
   
@@ -888,7 +888,7 @@
             ```
     4. 在 Spring 的 Bean 配置文件中声明 Struts Action 的示例代码(4)
 
-##Spring  整合 Struts2
+## Spring  整合 Struts2
 
 1. 在通用的 web 应用中访问 Spring
   
@@ -934,7 +934,7 @@
         2. 正常编写 struts 配置文件
         3. 编写 spring 配置文件, 在该配置文件中不需要配置 Action 实例
 
-##Spring注解驱动开发
+## Spring注解驱动开发
 
 1. 容器
     1. AnnotationConfigApplicationContext
