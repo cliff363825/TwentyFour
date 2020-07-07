@@ -8,10 +8,16 @@ public class TestBoxing {
         // 装箱：基本数据类型 -> 包装类
         // int -> Integer
         int i = 996;
+
+        // 手动装箱
         Integer i1 = new Integer(i);
-        Integer i2 = Integer.valueOf(996);
+        Integer i2 = Integer.valueOf(i);
         System.out.println("i1 = " + i1);
         System.out.println("i2 = " + i2);
+
+        // 自动装箱，底层其实执行了 Integer i3 = Integer.valueOf(i);
+        Integer i3 = i;
+        System.out.println("i3 = " + i3);
     }
 
     @Test
@@ -30,10 +36,19 @@ public class TestBoxing {
     public void testUnboxing() {
         // 拆箱：包装类 -> 基本数据类型
         // Integer -> int
-        Integer i1 = new Integer(996);
+
+        // 自动装箱，底层执行 Integer i1 = Integer.valueOf(996);
+        Integer i1 = 996;
+
+        // 手动拆箱
         int i2 = i1.intValue();
+
+        // 自动拆箱，底层其实执行了 int i3 = i1.intValue();
+        int i3 = i1;
+
         System.out.println("i1 = " + i1);
         System.out.println("i2 = " + i2);
+        System.out.println("i3 = " + i3);
     }
 
     @Test

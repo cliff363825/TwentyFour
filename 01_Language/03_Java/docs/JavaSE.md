@@ -1,4 +1,22 @@
 # Java篇之JavaSE
+## Java基础
+
+### 基本数据类型
+
+1. Java要确定每种基本类型所占存储空间的大小。它们的大小并不像其他大多数语言那样随机器硬件架构的变化而变化。这种所占存储空间大小的不变性是Java程序比用其他大多数语言编写的程序更具可移植性的原因之一。
+
+   | 基本类型 | 大小    | 最小值    | 最大值             | 包装器类型 |
+   | -------- | ------- | --------- | ------------------ | ---------- |
+   | boolean  | -       | -         | -                  | Boolean    |
+   | char     | 16-bit  | Unicode 0 | Unicode $2^{16}-1$ | Character  |
+   | byte     | 8 bits  | -128      | +127               | Byte       |
+   | short    | 16 bits | -$2^{15}$ | +$2^{15} - 1$      | Short      |
+   | int      | 32 bits | -$2^{31}$ | +$2^{31} - 1$      | Integer    |
+   | long     | 64 bits | -$2^{63}$ | +$2^{63} - 1$      | Long       |
+   | float    | 32 bits | IEEE754   | IEEE754            | Float      |
+   | double   | 64 bits | IEEE754   | IEEE754            | Double     |
+   | void     | -       | -         | -                  | Void       |
+
 ## 面向对象编程
 
 ### 类的成员之一：属性
@@ -176,7 +194,16 @@
 
 ### 包装类
 
-1. 针对八种基本数据类型定义相应的引用类型——包装类（封装类）
+1. 类对象，有自己的堆空间
+
+2. 常量池：性能 vs 资源
+
+    1. Byte、Short、Integer、Long：[-128, 127]
+    2. Charater：[0, 127]
+    3. Boolean: TRUE/FALSE
+    4. Float、Double：无
+
+3. 针对八种基本数据类型定义相应的引用类型——包装类（封装类）
 
     | 基本数据类型 | 包装类              |
     | ------------ | ------------------- |
@@ -189,7 +216,7 @@
     | boolean      | Boolean             |
     | char         | Character           |
 
-2. 装箱：基本数据类型包装成包装类的实例
+4. 装箱：基本数据类型包装成包装类的实例
 
     ```
     // int -> Integer
@@ -200,7 +227,7 @@
     Integer i2 = Integer.valueOf(996);
     ```
 
-3. 拆箱：获得包装类对象中包装的基本类型变量
+5. 拆箱：获得包装类对象中包装的基本类型变量
 
     ```
     // Integer -> int
@@ -209,9 +236,9 @@
     int i3 = i1.intValue();
     ```
 
-4. JDK1.5之后，支持自动装箱，自动拆箱。但类型必须匹配。
+6. JDK1.5之后，支持自动装箱，自动拆箱。但类型必须匹配。
 
-5. 字符串转换成基本数据类型：
+7. 字符串转换成基本数据类型：
 
     ```
     // String -> int
@@ -223,7 +250,7 @@
     int i2 = Integer.parseInt("996");
     ```
 
-6. 基本数据类型转换成字符串
+8. 基本数据类型转换成字符串
 
     ```
     // int -> String
@@ -233,10 +260,10 @@
     // 2. Integer.toString();
     String s2 = Integer.toString(996);
     ```
-    
-7. java.lang.Class.isPrimitive(): 判断是否是基本数据类型。`int.class.isPrimitive();`
 
-8. [深入浅出JAVA包装类及面试题陷阱](./深入浅出JAVA包装类及面试题陷阱.md)
+9. java.lang.Class.isPrimitive(): 判断是否是基本数据类型。`int.class.isPrimitive();`
+
+10. [深入浅出JAVA包装类及面试题陷阱](./深入浅出JAVA包装类及面试题陷阱.md)
 
 ### 关键字 - static
 
@@ -407,9 +434,13 @@
 ### Collection子接口之一：List接口
 
 1. 鉴于Java中数组用来存储数据的局限性，我们通常使用List替代数组。
+
 2. List集合类中元素有序、且可重复，集合中的每个元素都有其对应的顺序索引。
+
 3. List容器中的元素都对应一个整数型的序号记载其在容器中的位置，可以根据序号存取容器中的元素。
+
 4. JDK API中List接口的实现类常用的有：ArrayList、LinkedList和Vector。
+
 5. List实现类之一：ArrayList
     1. ArrayList 是 List 接口的典型实现类、主要实现类
     2. 本质上，ArrayList是对象引用的一个“变长”数组
@@ -419,20 +450,38 @@
     4. Arrays.asList(...) 方法返回的List集合，既不是ArrayList实例，也不是Vector实例。Arrays.asList(...) 返回值时一个固定长度的List集合。
     5. ArrayList 是线程不安全的，而 Vector 是线程安全的，即使为保证 List 集合线程安全，也不推荐使用Vector
     6. Arrays.asList(...) 方法返回的 List 集合既不是 ArrayList 实例，也不是 Vector 实例。 Arrays.asList(...) 返回值是一个固定长度的 List 集合
+    
 6. List实现类之二：LinkedList
     1. 对于频繁的插入或删除元素的操作，建议使用LinkedList类，效率较高
     2. LinkedList：双向链表，内部没有声明数组，而是定义了Node类型的first和last，用于记录首末元素。同时，定义内部类Node，作为LinkedList中保存数据的基本结构。Node除了保存数据，还定义了两个变量：
         1. prev变量记录前一个元素的位置
         2. next变量记录下一个元素的位置
+    
 7. List 实现类之三：Vector
     1. Vector 是一个古老的集合，JDK1.0就有了。大多数操作与ArrayList相同，区别之处在于Vector是线程安全的。
     2. 在各种list中，最好把ArrayList作为缺省选择。当插入、删除频繁时，使用LinkedList；Vector总是比ArrayList慢，所以尽量避免使用。
+    
 8. ArrayList/LinkedList/Vector的异同？
     1. ArrayList和LinkedList的异同
         1. 二者都线程不安全，相对线程安全的Vector，执行效率高。
         2. 此外，ArrayList是实现了基于动态数组的数据结构，LinkedList基于链表的数据结构。对于随机访问get和set，ArrayList觉得优于LinkedList，因为LinkedList要移动指针。对于新增和删除操作add（特指插入）和remove，LinkedList比较占优势，因为ArrayList要移动数据。
     2. ArrayList和Vector的区别
         1. Vector和ArrayList几乎是完全相同的，唯一的区别在于Vector是同步类（synchronized），属于强同步类。因此开销就比ArrayList要大，访问要慢。正常情况下，大多数的Java程序员使用ArrayList而不是Vector，因为同步完全可以由程序员自己来控制。Vector每次扩容请求其大小的2倍空间，而ArrayList是1.5倍。Vector还有一个子类Stack。
+    
+9. 不要在foreach循环里进行元素的remove/add操作。remove元素请使用Iterator方式，如果并发操作，需要对Iterator对象加锁。
+
+    ```
+    List<String> list = new ArrayList<>();
+    list.add("1");
+    list.add("2");
+    Iterator<String> iterator = list.iterator();
+    while (iterator.hasNext()) {
+        String item = iterator.next();
+        if (删除元素的条件) {
+            iterator.remove();
+        }
+    }
+    ```
 
 ### Collection子接口之二：Set接口
 

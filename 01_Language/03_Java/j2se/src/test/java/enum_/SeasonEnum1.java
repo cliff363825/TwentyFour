@@ -1,8 +1,6 @@
 package enum_;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SeasonEnum1 {
@@ -15,28 +13,7 @@ public class SeasonEnum1 {
     public final static SeasonEnum1 AUTUMN = new SeasonEnum1("秋天", "秋水共长天一色");
     public final static SeasonEnum1 WINTER = new SeasonEnum1("冬天", "窗含西岭千秋雪");
 
-    private final static SeasonEnum1[] ENUMS;
-
-    static {
-        List<SeasonEnum1> enumList = new ArrayList<>();
-        Field[] declaredFields = SeasonEnum1.class.getDeclaredFields();
-        for (Field declaredField : declaredFields) {
-            // public static final SeasonEnum1
-            int modifiers = declaredField.getModifiers();
-            if (Modifier.isPublic(modifiers) &&
-                    Modifier.isStatic(modifiers) &&
-                    Modifier.isFinal(modifiers) &&
-                    declaredField.getType() == SeasonEnum1.class
-            ) {
-                try {
-                    enumList.add((SeasonEnum1) declaredField.get(SeasonEnum1.class));
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        ENUMS = enumList.toArray(new SeasonEnum1[0]);
-    }
+    private final static List<SeasonEnum1> ENUMS = Arrays.asList(SPRINT, SUMMER, AUTUMN, WINTER);
 
     // 2. 枚举类的使用 private final 修饰的属性应该在构造器中为其赋值
     // 3. 若枚举类显示的定义了带参数的构造器，则在列出枚举值时也必须对应的传入参数
@@ -54,7 +31,7 @@ public class SeasonEnum1 {
     }
 
     public static SeasonEnum1[] values() {
-        return ENUMS;
+        return ENUMS.toArray(new SeasonEnum1[0]);
     }
 
     public static SeasonEnum1 valueOf(String name) {
@@ -73,10 +50,11 @@ public class SeasonEnum1 {
     }
 
     public int ordinal() {
-        for (int i = 0; ; i++) {
-            if (ENUMS[i] == this) {
+        for (int i = 0; i < ENUMS.size(); i++) {
+            if (ENUMS.get(i) == this) {
                 return i;
             }
         }
+        return -1;
     }
 }
