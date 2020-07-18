@@ -135,4 +135,186 @@
 4. 配置Sharding-JDBC分片策略
 
    1. 在项目application.properties配置文件中进行配置
-   2. 
+
+      ```properties
+      # sharding jdbc分片策略
+      # 配置数据源，给数据源起名称
+      spring.shardingsphere.datasource.names=m1
+      
+      # 一个实体类对应两张表，覆盖
+      spring.main.allow-bean-definition-overriding=true
+      
+      # 配置数据源具体内容，包含连接池，驱动，地址，用户名和密码
+      spring.shardingsphere.datasource.m1.type=com.alibaba.druid.pool.DruidDataSource
+      spring.shardingsphere.datasource.m1.driver-class-name=com.mysql.cj.jdbc.Driver
+      spring.shardingsphere.datasource.m1.url=jdbc:mysql://localhost:3306/default?serverTimezone=GMT%2B8
+      spring.shardingsphere.datasource.m1.username=root
+      spring.shardingsphere.datasource.m1.password=root
+      
+      # 指定course表分布情况，配置表在哪个数据库里面，表名称都是什么 m1.course_1，m1.course_2
+      spring.shardingsphere.sharding.tables.course.actual-data-nodes=m1.course_$->{1..2}
+      
+      # 指定course表里面主键生成策略 SNOWFLAKE
+      spring.shardingsphere.sharding.tables.course.key-generator.column=cid
+      spring.shardingsphere.sharding.tables.course.key-generator.type=SNOWFLAKE
+      
+      # 指定分片策略 约定cid的值偶数添加到course_1表，如果cid是奇数添加到course_2表
+      spring.shardingsphere.sharding.tables.course.table-strategy.inline.sharding-column=cid
+      spring.shardingsphere.sharding.tables.course.table-strategy.inline.algorithm-expression=course_$->{cid % 2 + 1}
+      
+      # 打开sql输出日志
+      spring.shardingsphere.props.sql.show=true
+      ```
+
+5. 编写测试代码
+
+### Sharding-JDBC实现水平分库
+
+1. 需求分析
+
+   1. 创建两个数据库
+   2. 数据库规则：
+      1. userid为偶数数据添加edu_db_1数据库
+      2. 为奇数数据添加edu_db_2数据库
+   3. 表规则：
+      1. cid为偶数数据添加course_1表
+      2. 为奇数数据添加course_2表
+
+2. 创建数据库和表
+
+3. 在SpringBoot配置文件配置数据库分片规则
+
+   ```properties
+   # sharding jdbc分片策略
+   # 配置数据源，给数据源起名称
+   # 水平分库，配置两个数据源
+   spring.shardingsphere.datasource.names=m1,m2
+   
+   # 一个实体类对应两张表，覆盖
+   spring.main.allow-bean-definition-overriding=true
+   
+   # 配置第一个数据源具体内容，包含连接池，驱动，地址，用户名和密码
+   spring.shardingsphere.datasource.m1.type=com.alibaba.druid.pool.DruidDataSource
+   spring.shardingsphere.datasource.m1.driver-class-name=com.mysql.cj.jdbc.Driver
+   spring.shardingsphere.datasource.m1.url=jdbc:mysql://localhost:3306/edu_db_1?serverTimezone=GMT%2B8
+   spring.shardingsphere.datasource.m1.username=root
+   spring.shardingsphere.datasource.m1.password=root
+   
+   # 配置第二个数据源具体内容，包含连接池，驱动，地址，用户名和密码
+   spring.shardingsphere.datasource.m2.type=com.alibaba.druid.pool.DruidDataSource
+   spring.shardingsphere.datasource.m2.driver-class-name=com.mysql.cj.jdbc.Driver
+   spring.shardingsphere.datasource.m2.url=jdbc:mysql://localhost:3306/edu_db_2?serverTimezone=GMT%2B8
+   spring.shardingsphere.datasource.m2.username=root
+   spring.shardingsphere.datasource.m2.password=root
+   
+   # 指定数据库分布情况，数据库里面表分布情况
+   # m1 m2 course_1 course_2
+   spring.shardingsphere.sharding.tables.course.actual-data-nodes=m$->{1..2}.course_$->{1..2}
+   
+   # 指定course表分布情况，配置表在哪个数据库里面，表名称都是什么 m1.course_1，m1.course_2
+   #spring.shardingsphere.sharding.tables.course.actual-data-nodes=m1.course_$->{1..2}
+   
+   # 指定course表里面主键生成策略 SNOWFLAKE
+   spring.shardingsphere.sharding.tables.course.key-generator.column=cid
+   spring.shardingsphere.sharding.tables.course.key-generator.type=SNOWFLAKE
+   
+   # 指定表分片策略 约定cid的值偶数添加到course_1表，如果cid是奇数添加到course_2表
+   spring.shardingsphere.sharding.tables.course.table-strategy.inline.sharding-column=cid
+   spring.shardingsphere.sharding.tables.course.table-strategy.inline.algorithm-expression=course_$->{cid % 2 + 1}
+   
+   # 指定数据库分片策略，约定user_id是偶数添加m1，是奇数添加m2
+   #spring.shardingsphere.sharding.default-database-strategy.inline.sharding-column=user_id
+   #spring.shardingsphere.sharding.default-database-strategy.inline.algorithm-expression=m$->{user_id % 2 + 1}
+   
+   spring.shardingsphere.sharding.tables.course.database-strategy.inline.sharding-column=user_id
+   spring.shardingsphere.sharding.tables.course.database-strategy.inline.algorithm-expression=m$->{user_id % 2 + 1}
+   
+   # 打开sql输出日志
+   spring.shardingsphere.props.sql.show=true
+   ```
+
+4. 编写测试方法
+
+### Sharding-JDBC实现垂直分库
+
+1. 需求分析
+
+2. 创建数据库和表
+
+3. 编写操作代码
+
+   1. 创建User实体类和mapper
+
+   2. 配置垂直分库策略
+
+      ```properties
+      # sharding jdbc分片策略
+      # 配置数据源，给数据源起名称
+      # 水平分库，配置两个数据源
+      spring.shardingsphere.datasource.names=m1,m2,m0
+      
+      # 一个实体类对应两张表，覆盖
+      spring.main.allow-bean-definition-overriding=true
+      
+      # 配置第一个数据源具体内容，包含连接池，驱动，地址，用户名和密码
+      spring.shardingsphere.datasource.m1.type=com.alibaba.druid.pool.DruidDataSource
+      spring.shardingsphere.datasource.m1.driver-class-name=com.mysql.cj.jdbc.Driver
+      spring.shardingsphere.datasource.m1.url=jdbc:mysql://localhost:3306/edu_db_1?serverTimezone=GMT%2B8
+      spring.shardingsphere.datasource.m1.username=root
+      spring.shardingsphere.datasource.m1.password=root
+      
+      # 配置第二个数据源具体内容，包含连接池，驱动，地址，用户名和密码
+      spring.shardingsphere.datasource.m2.type=com.alibaba.druid.pool.DruidDataSource
+      spring.shardingsphere.datasource.m2.driver-class-name=com.mysql.cj.jdbc.Driver
+      spring.shardingsphere.datasource.m2.url=jdbc:mysql://localhost:3306/edu_db_2?serverTimezone=GMT%2B8
+      spring.shardingsphere.datasource.m2.username=root
+      spring.shardingsphere.datasource.m2.password=root
+      
+      # 配置第三个数据源具体内容，包含连接池，驱动，地址，用户名和密码
+      spring.shardingsphere.datasource.m0.type=com.alibaba.druid.pool.DruidDataSource
+      spring.shardingsphere.datasource.m0.driver-class-name=com.mysql.cj.jdbc.Driver
+      spring.shardingsphere.datasource.m0.url=jdbc:mysql://localhost:3306/user_db?serverTimezone=GMT%2B8
+      spring.shardingsphere.datasource.m0.username=root
+      spring.shardingsphere.datasource.m0.password=root
+      
+      # 配置user_db数据库里面t_user专库专表
+      spring.shardingsphere.sharding.tables.t_user.actual-data-nodes=m$->{0}.t_user
+      
+      # 指定t_user表里面主键生成策略 SNOWFLAKE
+      spring.shardingsphere.sharding.tables.t_user.key-generator.column=user_id
+      spring.shardingsphere.sharding.tables.t_user.key-generator.type=SNOWFLAKE
+      
+      # 指定表分片策略
+      spring.shardingsphere.sharding.tables.t_user.table-strategy.inline.sharding-column=user_id
+      spring.shardingsphere.sharding.tables.t_user.table-strategy.inline.algorithm-expression=t_user
+      ```
+
+   3. 编写测试代码
+
+### Sharding-JDBC操作公共表
+
+1. 公共表
+
+   1. 存储固定数据的表，表数据很少发生变化，查询时候经常进行关联
+   2. 在每个数据库中创建相同结构公共表
+
+2. 在多个数据库都创建相同结构公共表
+
+3. 在项目配置文件application.properties进行公共表配置
+
+   ```properties
+   # 配置公共表
+   spring.shardingsphere.sharding.broadcast-tables=t_udict
+   spring.shardingsphere.sharding.tables.t_udict.key-generator.column=dictid
+   spring.shardingsphere.sharding.tables.t_udict.key-generator.type=SNOWFLAKE
+   ```
+
+4. 编写测试代码
+
+   1. 创建新实体类和mapper
+   2. 编写添加和删除方法进行测试
+
+### Sharding-JDBC实现读写分离
+
+1. 读写分离概念
+   1. 为了确保数据库产品的稳定性，很多数据库拥有双机热备功能。也就是，第一台数据库服务器，是对外提供增删改查
