@@ -317,4 +317,155 @@
 ### Sharding-JDBC实现读写分离
 
 1. 读写分离概念
-   1. 为了确保数据库产品的稳定性，很多数据库拥有双机热备功能。也就是，第一台数据库服务器，是对外提供增删改查
+   
+   1. 为了确保数据库产品的稳定性，很多数据库拥有双机热备功能。也就是，第一台数据库服务器，是对外提供增删改业务的生产服务器；第二台数据库服务器，主要进行读的操作。
+   
+   2. 原理：让主数据库（master）处理事务性增、改、删操作，而从数据库（slave）处理SELECT查询操作。
+   
+   3. 读写分离原理：
+   
+      ![02读写分离](./images/02读写分离.bmp)
+   
+2. MySQL配置读写分离
+
+   1. 第一步：创建两个MySQL数据库服务，并且启动两个MySQL服务
+
+      1. 复制之前MySQL目录
+
+      2. 修改复制之后配置文件
+
+         1. 修改端口号，文件路径
+
+            ```ini
+            [mysqld]
+            #设置3307端口
+            port=3307
+            #设置mysql的安装路径
+            basedir=D:\mysql-5.7.25-s1
+            #设置mysql数据库的数据的存放目录
+            datadir=D:\mysql-5.7.25-s1\data
+            ```
+
+         2. 需要把数据文件目录在复制一份
+
+      3. 把复制修改之后从数据库在windows安装服务
+
+         ```
+         D:\mysql-5.7.25-s1\bin>mysqld install mysqls1 --default-file='D:\mysql-5.7.25-s1\my.ini'
+         
+         #删除服务命令
+         sc delete 服务名称
+         ```
+
+   2. 第二步：配置MySQL主从服务器
+
+      1. 在主服务器配置文件
+
+         ```ini
+         [mysqld]
+         #开启日志
+         log-bin=mysql-bin
+         #设置服务id，主从不能一致
+         server-id=1
+         #设置需要同步的数据库
+         binlog-do-db=user_db
+         #屏蔽系统库同步
+         binlog-ignore-db=mysql
+         binlog-ignore-db=information_schema
+         binlog-ignore-db=performance_schema
+         ```
+
+      2. 在从服务器配置文件
+
+         ```ini
+         [mysqld]
+         #开启日志
+         log-bin=mysql-bin
+         #设置服务id，主从不能一致
+         server-id=2
+         #设置需要同步的数据库
+         replicate_wild_do_table=user_db.%
+         #屏蔽系统库同步
+         replicate_wild_ignore_table=mysql.%
+         replicate_wild_ignore_table=information_schema.%
+         replicate_wild_ignore_table=performance_schema.%
+         ```
+
+      3. 把主和从服务器重启
+
+   3. 第三步：创建用于主从复制的账号
+
+      1. 切换至主库bin目录，登录主库
+
+         ```
+         mysql -h localhost -uroot -p
+         ```
+
+      2. 授权主备复制专用账号
+
+         ```mysql
+         GRANT REPLICATION SLAVE ON *.* TO 'db_sync'@'%' IDENTIFIED BY 'db_sync';
+         ```
+
+         | Host | User    | Repl_slave_priv | ...  |
+         | ---- | ------- | --------------- | ---- |
+         | %    | db_sync | Y               |      |
+
+      3. 刷新权限
+
+         ```mysql
+         FLUSH PRIVILEGES;
+         ```
+
+      4. 确定位点，记录下文件名以及位点
+
+         ```mysql
+         show master status;
+         ```
+
+         | File             | Position | Binlog_Do_DB | Binlog_Ignore_DB | ...  |
+         | ---------------- | -------- | ------------ | ---------------- | ---- |
+         | mysql-bin.000001 | 440      |              |                  |      |
+
+   4. 第四步：主从数据同步设置
+
+      1. 切换至从库bin目录，登录从库
+
+         ```
+         mysql -h localhost -P3307 -uroot -p
+         ```
+
+      2. 先停止同步
+
+         ```mysql
+         STOP SLAVE;
+         ```
+
+      3. 修改从库指向到主库，使用上一步记录的文件名以及位点
+
+         ```mysql
+         CHANGE MASTER TO
+         master_host='localhost',
+         master_user='db_sync',
+         master_password='db_sync',
+         master_log_file='mysql-bin.000001',
+         master_log_pos=440;
+         ```
+
+      4. 启动同步
+
+         ```mysql
+         START SLAVE;
+         ```
+
+      5. 查看Slave_IO_Running和Slave_SQL_Running字段值都为Yes，表示同步配置成功。如果不为Yes，请排查相关异常。
+
+         ```mysql
+         show slave status;
+         ```
+
+         | Relay_Master_Log_File | Slave_IO_Running | Slave_SQL_Running | ...  |
+         | --------------------- | ---------------- | ----------------- | ---- |
+         | mysql-bin.000001      | Yes              | Yes               |      |
+
+         
