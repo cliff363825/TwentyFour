@@ -439,6 +439,10 @@
 
          ```mysql
          STOP SLAVE;
+         
+         -- 注意，如果之前此从库已有主库指向，需要先执行以下命令清空
+         -- STOP SLAVE IO_THREAD FOR CHANNEL '';
+         -- reset slave all;
          ```
 
       3. 修改从库指向到主库，使用上一步记录的文件名以及位点
@@ -468,4 +472,300 @@
          | --------------------- | ---------------- | ----------------- | ---- |
          | mysql-bin.000001      | Yes              | Yes               |      |
 
-         
+3. Sharding-JDBC读写分离配置
+
+   1. 配置读写分离策略
+
+      ```properties
+      # user_db主服务器
+      spring.shardingsphere.datasource.m0.type=com.alibaba.druid.pool.DruidDataSource
+      spring.shardingsphere.datasource.m0.driver-class-name=com.mysql.cj.jdbc.Driver
+      spring.shardingsphere.datasource.m0.url=jdbc:mysql://localhost:3306/user_db?serverTimezone=GMT%2B8
+      spring.shardingsphere.datasource.m0.username=root
+      spring.shardingsphere.datasource.m0.password=root
+      
+      # user_db从服务器
+      spring.shardingsphere.datasource.s0.type=com.alibaba.druid.pool.DruidDataSource
+      spring.shardingsphere.datasource.s0.driver-class-name=com.mysql.cj.jdbc.Driver
+      spring.shardingsphere.datasource.s0.url=jdbc:mysql://localhost:3307/user_db?serverTimezone=GMT%2B8
+      spring.shardingsphere.datasource.s0.username=root
+      spring.shardingsphere.datasource.s0.password=root
+      
+      # 主库从库逻辑数据源定义 ds0为user_db
+      spring.shardingsphere.sharding.master-slave-rules.ds0.master-data-source-name=m0
+      spring.shardingsphere.sharding.master-slave-rules.ds0.slave-data-source-names=s0
+      
+      # 配置user_db数据库里面t_user专库专表
+      #spring.shardingsphere.sharding.tables.t_user.actual-data-nodes=m$->{0}.t_user
+      # t_user分表策略，固定分配至ds0的t_user真实表
+      spring.shardingsphere.sharding.tables.t_user.actual-data-nodes=ds0.t_user
+      ```
+
+   2. 编写测试代码
+
+## Sharding-Proxy简介
+
+1. 定位为透明的数据库代理端
+
+   ![img](./images/1196212-20200620204817373-295833964.png)
+
+2. Sharding-Proxy独立应用，需要安装服务，进行分库分表或者读写分离配置，启动使用
+
+3. 安装
+
+   1. [下载安装软件](https://shardingsphere.apache.org/document/legacy/4.x/document/cn/downloads/)
+   2. 把下载之后压缩文件，解压，启动bin目录启动文件就可以了
+
+### Sharding-Proxy配置（分表）
+
+1. 进入conf目录，修改文件server.yaml，打开两段内容注释
+
+   ```yaml
+   authentication:
+     users:
+       root:
+         password: root
+       sharding:
+         password: sharding
+         authorizedSchemas: sharding_db
+   
+   props:
+     max.connections.size.per.query: 1
+     acceptor.size: 16  # The default value is available processors count * 2.
+     executor.size: 16  # Infinite by default.
+     proxy.frontend.flush.threshold: 128  # The default value is 128.
+       # LOCAL: Proxy will run with LOCAL transaction.
+       # XA: Proxy will run with XA transaction.
+       # BASE: Proxy will run with B.A.S.E transaction.
+     proxy.transaction.type: LOCAL
+     proxy.opentracing.enabled: false
+     query.with.cipher.column: true
+     sql.show: false
+   ```
+
+2. 进入conf目录，修改config-sharding.yaml
+
+   1. 复制mysql驱动jar包到lib目录
+
+      ```
+      If you want to connect to MySQL, you should manually copy MySQL driver to lib directory.
+      ```
+
+   2. 配置分库分表规则
+
+      ```yaml
+      schemaName: sharding_db
+      
+      dataSources:
+        ds_0:
+          url: jdbc:mysql://127.0.0.1:3306/edu_1?serverTimezone=UTC&useSSL=false
+          username: root
+          password: root
+          connectionTimeoutMilliseconds: 30000
+          idleTimeoutMilliseconds: 60000
+          maxLifetimeMilliseconds: 1800000
+          maxPoolSize: 50
+      
+      shardingRule:
+        tables:
+          t_order:
+            actualDataNodes: ds_${0}.t_order_${0..1}
+            tableStrategy:
+              inline:
+                shardingColumn: order_id
+                algorithmExpression: t_order_${order_id % 2}
+            keyGenerator:
+              type: SNOWFLAKE
+              column: order_id
+        bindingTables:
+          - t_order
+        defaultDatabaseStrategy:
+          inline:
+            shardingColumn: user_id
+            algorithmExpression: ds_${0}
+        defaultTableStrategy:
+          none:
+      ```
+
+3. 启动Sharding-Proxy服务
+
+   1. Sharding-Proxy默认端口号3307
+
+4. 通过Sharding-Proxy启动端口进行连接
+
+   1. 打开cmd窗口连接Sharding-Proxy，连接方式和连接mysql一样的
+
+      ```
+      mysql -P3307 -uroot -p
+      ```
+
+   2. 进行sql命令操作看到只有一个库
+
+      ```
+      show databases;
+      ```
+
+   3. 在sharding_db数据库创建表
+
+      ```mysql
+      CREATE TABLE IF NOT EXISTS ds_0.t_order (
+      	order_id BIGINT NOT NULL,
+        user_id INT NOT NULL,
+        status VARCHAR(50),
+        PRIMARY KEY (order_id)
+      );
+      
+      -- use sharding_db;
+      -- show tables;
+      ```
+
+   4. 向表添加一条记录
+
+      ```mysql
+      INSERT INTO t_order (order_id, user_id, status) VALUES (11, 1, 'init');
+      
+      -- select * from t_order;
+      ```
+
+5. 回到本地3306端口实际数据库中，看到已经创建好了表和添加数据
+
+### Sharding-Proxy配置（分库）
+
+1. 创建两个数据库
+
+2. 找到conf目录，config-sharding.yaml
+
+   ```yaml
+   schemaName: sharding_db
+   
+   dataSources:
+     ds_0:
+       url: jdbc:mysql://127.0.0.1:3306/edu_db_1?serverTimezone=UTC&useSSL=false
+       username: root
+       password: root
+       connectionTimeoutMilliseconds: 30000
+       idleTimeoutMilliseconds: 60000
+       maxLifetimeMilliseconds: 1800000
+       maxPoolSize: 50
+     ds_1:
+       url: jdbc:mysql://127.0.0.1:3306/edu_db_2?serverTimezone=UTC&useSSL=false
+       username: root
+       password: root
+       connectionTimeoutMilliseconds: 30000
+       idleTimeoutMilliseconds: 60000
+       maxLifetimeMilliseconds: 1800000
+       maxPoolSize: 50
+   
+   shardingRule:
+     tables:
+       t_order:
+         actualDataNodes: ds_${0..1}.t_order_${0..1}
+         tableStrategy:
+           inline:
+             shardingColumn: order_id
+             algorithmExpression: t_order_${order_id % 2}
+         keyGenerator:
+           type: SNOWFLAKE
+           column: order_id
+     bindingTables:
+       - t_order
+     defaultDatabaseStrategy:
+       inline:
+         shardingColumn: user_id
+         algorithmExpression: ds_${user_id % 2}
+     defaultTableStrategy:
+       none:
+   ```
+
+3. 启动Sharding-Proxy服务
+
+4. 打开cmd，连接Sharding-Proxy服务
+
+   ```
+   mysql -P3307 -uroot -p
+   ```
+
+   1. 创建数据库表，向表添加数据
+
+      ```mysql
+      CREATE TABLE IF NOT EXISTS ds_0.t_order (
+      	order_id BIGINT NOT NULL,
+      	user_id INT NOT NULL,
+      	status VARCHAR(50),
+      	PRIMARY KEY (order_id)
+      );
+      
+      INSERT INTO t_order(order_id, user_id, status) VALUES (11, 1, 'init');
+      ```
+
+   2. 连接本地3306的MySQL数据库服务器，表已经创建出来，表里面有数据
+
+### Sharding-Proxy配置（读写分离）
+
+1. 创建三个数据
+
+2. 修改conf里面配置文件，config-master-slave.yaml
+
+   ```yaml
+   schemaName: master_slave_db
+   
+   dataSources:
+     master_ds:
+       url: jdbc:mysql://127.0.0.1:3306/demo_ds_master?serverTimezone=UTC&useSSL=false
+       username: root
+       password: root
+       connectionTimeoutMilliseconds: 30000
+       idleTimeoutMilliseconds: 60000
+       maxLifetimeMilliseconds: 1800000
+       maxPoolSize: 50
+     slave_ds_0:
+       url: jdbc:mysql://127.0.0.1:3306/demo_ds_slave_0?serverTimezone=UTC&useSSL=false
+       username: root
+       password: root
+       connectionTimeoutMilliseconds: 30000
+       idleTimeoutMilliseconds: 60000
+       maxLifetimeMilliseconds: 1800000
+       maxPoolSize: 50
+     slave_ds_1:
+       url: jdbc:mysql://127.0.0.1:3306/demo_ds_slave_1?serverTimezone=UTC&useSSL=false
+       username: root
+       password: root
+       connectionTimeoutMilliseconds: 30000
+       idleTimeoutMilliseconds: 60000
+       maxLifetimeMilliseconds: 1800000
+       maxPoolSize: 50
+   
+   masterSlaveRule:
+     name: ms_ds
+     masterDataSourceName: master_ds
+     slaveDataSourceNames:
+       - slave_ds_0
+       - slave_ds_1
+   ```
+
+3. 启动Sharding-Proxy服务
+
+4. 通过cmd连接Sharding-Proxy，进行创建表和添加记录操作
+
+   1. 在主数据库和从数据库里面，都创建数据库表
+   2. 向表添加记录，不指定向哪个库添加
+      1. 把添加数据添加到主数据库里面
+   3. 查询数据库表数据，不指定查询哪个库
+      1. 直接执行查询从库里面的数据
+
+## 课程总结
+
+1. 基本概念
+   1. 什么是Sharding Sphere
+   2. 什么是分库分表
+      1. 水平切分和垂直切分
+2. Sharding-JDBC
+   1. 什么是Sharding-JDBC
+   2. 使用Sharding-JDBC水平切分
+   3. 使用Sharding-JDBC垂直切分
+   4. 使用Sharding-JDBC操作公共表
+   5. 使用Sharding-JDBC读写分离
+3. Sharding-Proxy
+   1. 什么是Sharding-Proxy
+   2. 使用Sharding-Proxy分库分表
+   3. 使用Sharding-Proxy读写分离
