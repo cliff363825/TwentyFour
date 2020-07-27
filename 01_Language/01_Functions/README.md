@@ -1,4 +1,4 @@
-## Completed list
+## PHP函数实现列表
 
 | PHP                                   | Java | Javascript | Python | Go   |
 | ------------------------------------- | ---- | ---------- | ------ | ---- |
@@ -230,4 +230,15 @@
 | func_get_arg(s)                       | X    |            |        | X    |
 | func_num_args                         | X    |            |        | X    |
 | function_exists                       | X    |            |        | X    |
+| fwrite                                |      | X          |        |      |
+| gc_collect_cycles                     |      | X          |        |      |
+| gc_disable                            | X    | X          |        | X    |
+| gc_enable                             | X    | X          |        | X    |
+| gc_enabled                            | X    | X          |        | X    |
+| ~~gc_mem_caches~~                     |      |            |        |      |
+| ~~gd_info~~                           |      |            |        |      |
+| ~~get_browser~~                       |      |            |        |      |
+| ~~get_called_class~~                  |      |            |        |      |
+| get_cfg_var                           |      | X          | X      | X    |
+| get_class                             |      | X          |        |      |
 
