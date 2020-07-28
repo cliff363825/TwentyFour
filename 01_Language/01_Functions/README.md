@@ -241,4 +241,5 @@
 | ~~get_called_class~~                  |      |            |        |      |
 | get_cfg_var                           |      | X          | X      | X    |
 | get_class                             |      | X          |        |      |
+| get_class_methods                     |      | X          |        | X    |
 
