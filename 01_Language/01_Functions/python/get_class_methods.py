@@ -11,10 +11,12 @@ class myclass(object):
     def myfunc2(self):
         return True
 
+
 # print(myclass.__dict__)
 # print(vars(myclass))
 def get_class_methods(cls):
-    return [method for method in cls.__dict__.keys() if callable(getattr(cls, method))]
+    return [method for method in vars(cls).keys() if callable(getattr(cls, method))]
+
 
 if __name__ == '__main__':
     print(get_class_methods(myclass))
