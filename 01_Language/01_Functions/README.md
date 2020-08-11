@@ -243,4 +243,8 @@
 | get_class                             |      | X          |        |      |
 | get_class_methods                     |      | X          |        |      |
 | get_class_vars                        |      | X          |        |      |
+| get_current_user                      | X    | X          |        | X    |
+| ~~get_declared_*~~                    |      |            |        |      |
+| ~~get_defined_*~~                     |      |            |        |      |
+| get_headers                           |      | X          |        |      |
 
