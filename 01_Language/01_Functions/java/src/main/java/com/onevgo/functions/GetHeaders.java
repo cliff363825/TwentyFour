@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GetHeaders {
-    public Map<String, List<String>> getHeaders(String url) {
+    public static Map<String, List<String>> getHeaders(String url) {
         URLConnection urlConnection = null;
         try {
             urlConnection = new URL(url).openConnection();
@@ -19,6 +19,6 @@ public class GetHeaders {
     }
 
     public static void main(String[] args) {
-        System.out.println(new GetHeaders().getHeaders("http://www.onevgo.com"));
+        System.out.println(getHeaders("http://www.onevgo.com"));
     }
 }

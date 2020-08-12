@@ -247,4 +247,9 @@
 | ~~get_declared_*~~                    |      |            |        |      |
 | ~~get_defined_*~~                     |      |            |        |      |
 | get_headers                           |      | X          |        |      |
+| ~~get_html_translation_table~~        |      |            |        |      |
+| get_include_path                      |      | X          |        |      |
+| ~~get_included_files~~                |      |            |        |      |
+| ~~get_loaded_extensions~~             |      |            |        |      |
+| get_meta_tags                         |      | X          |        | TODO |
 
