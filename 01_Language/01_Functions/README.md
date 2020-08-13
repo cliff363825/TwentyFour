@@ -252,4 +252,5 @@
 | ~~get_included_files~~                |      |            |        |      |
 | ~~get_loaded_extensions~~             |      |            |        |      |
 | get_meta_tags                         |      | X          |        | TODO |
+| get_object_vars                       |      | X          |        |      |
 

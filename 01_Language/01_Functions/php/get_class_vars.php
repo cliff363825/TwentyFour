@@ -1,10 +1,5 @@
 <?php
 
-function format($array)
-{
-    return implode('|', array_keys($array)) . "\r\n";
-}
-
 class TestCase
 {
     public $a    = 1;
@@ -13,9 +8,10 @@ class TestCase
 
     public static function expose()
     {
-        echo format(get_class_vars(__CLASS__));
+        var_dump(get_class_vars(__CLASS__));
     }
 }
 
 TestCase::expose();
-echo format(get_class_vars('TestCase'));
+echo "=================\n";
+var_dump(get_class_vars('TestCase'));

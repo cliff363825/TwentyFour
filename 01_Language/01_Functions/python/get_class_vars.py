@@ -1,5 +1,9 @@
 # coding: utf-8
 
+def get_class_vars(cls):
+    return vars(cls)
+
+
 class TestCase(object):
     d = 1
     _e = 2
@@ -12,9 +16,10 @@ class TestCase(object):
 
     @classmethod
     def expose(cls):
-        print(vars(cls))
+        print(get_class_vars(cls))
 
 
-TestCase.expose()
-print(vars(TestCase))
-print(vars(TestCase()))
+if __name__ == '__main__':
+    TestCase.expose()
+    print("================")
+    print(get_class_vars(TestCase))
