@@ -31,10 +31,10 @@ $redis->multi();
 $currentStock -= 1;
 $redis->set($stockKey, $currentStock);
 $result = $redis->exec();
-if ($result == false) {
-    write_log("抢购失败");
-} else {
+if ($result && $result[0] === true) {
     write_log("抢购成功, 剩余库存： $currentStock");
+} else {
+    write_log("抢购失败");
 }
 
 function write_log($msg)

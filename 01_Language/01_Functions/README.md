@@ -253,4 +253,7 @@
 | ~~get_loaded_extensions~~             |      |            |        |      |
 | get_meta_tags                         |      | X          |        | TODO |
 | get_object_vars                       |      | X          |        |      |
+| get_parent_class                      |      | X          |        | X    |
+| ~~get_required_files~~                |      |            |        |      |
+| ~~get_resource_type~~                 |      |            |        |      |
 

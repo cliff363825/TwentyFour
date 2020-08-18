@@ -7,30 +7,27 @@ public class ArrayChunk {
     public static <E> List<List<E>> arrayChunk(Collection<E> col, int size) {
         int cap = (int) Math.ceil(col.size() * 1.0 / size);
         List<List<E>> res = new ArrayList<>(cap);
-        List<E> row = new ArrayList<>(size);
+        List<E> l = null;
         for (E e : col) {
-            if (row.size() == size) {
-                res.add(row);
-                row = new ArrayList<>(size);
+            if (l == null || l.size() == size) {
+                l = new ArrayList<>(size);
+                res.add(l);
             }
-            row.add(e);
-        }
-        if (row.size() > 0) {
-            res.add(row);
+            l.add(e);
         }
         return res;
     }
 
     public static <K, V> List<Map<K, V>> arrayChunk(Map<K, V> map, int size, Supplier<Map<K, V>> supplier) {
-        int resCap = (int) Math.ceil(map.size() * 1.0 / size);
-        List<Map<K, V>> res = new ArrayList<>(resCap);
-        Map<K, V> curMap = null;
+        int cap = (int) Math.ceil(map.size() * 1.0 / size);
+        List<Map<K, V>> res = new ArrayList<>(cap);
+        Map<K, V> m = null;
         for (Map.Entry<K, V> entry : map.entrySet()) {
-            if (curMap == null || curMap.size() == size) {
-                curMap = supplier.get();
-                res.add(curMap);
+            if (m == null || m.size() == size) {
+                m = supplier.get();
+                res.add(m);
             }
-            curMap.put(entry.getKey(), entry.getValue());
+            m.put(entry.getKey(), entry.getValue());
         }
         return res;
     }
