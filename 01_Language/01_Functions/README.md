@@ -256,4 +256,7 @@
 | get_parent_class                      |      | X          |        | X    |
 | ~~get_required_files~~                |      |            |        |      |
 | ~~get_resource_type~~                 |      |            |        |      |
+| getcwd                                |      | X          |        |      |
+| getdate                               |      |            |        |      |
+| getenv                                |      |            |        |      |
 
