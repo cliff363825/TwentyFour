@@ -261,4 +261,6 @@
 | getenv                                |      |            |        |      |
 | gethostbyaddr                         |      | X          |        |      |
 | gethostbyname                         |      | X          |        |      |
+| gethostbynamel                        |      | X          |        |      |
+| gethostname                           |      | X          |        |      |
 
