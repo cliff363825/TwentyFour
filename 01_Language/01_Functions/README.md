@@ -259,4 +259,6 @@
 | getcwd                                |      | X          |        |      |
 | getdate                               |      |            |        |      |
 | getenv                                |      |            |        |      |
+| gethostbyaddr                         |      | X          |        |      |
+| gethostbyname                         |      | X          |        |      |
 
