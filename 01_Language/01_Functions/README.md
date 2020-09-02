@@ -263,4 +263,8 @@
 | gethostbyname                         |      | X          |        |      |
 | gethostbynamel                        |      | X          |        |      |
 | gethostname                           |      | X          |        |      |
+| getimagesize                          |      | X          |        |      |
+| getimagesizefromstring                |      | X          |        |      |
+| ~~getlastmod~~                        |      |            |        |      |
+| getmxrr                               | X    | X          |        |      |
 
