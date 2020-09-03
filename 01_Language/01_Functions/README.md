@@ -267,4 +267,8 @@
 | getimagesizefromstring                |      | X          |        |      |
 | ~~getlastmod~~                        |      |            |        |      |
 | getmxrr                               | X    | X          |        |      |
+| ~~getmy*~~                            |      |            |        |      |
+| getopt                                |      | X          |        | X    |
+| getprotobyname                        | X    | X          |        | X    |
+| ~~getprotobynumber~~                  |      |            |        |      |
 
