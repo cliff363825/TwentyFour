@@ -1,12 +1,11 @@
-package datatype
+package main
 
 import (
 	"fmt"
-	"testing"
 	"unsafe"
 )
 
-func TestInt(t *testing.T) {
+func main() {
 	//var i int8
 	//i = -129 // constant -129 overflows int8
 
@@ -18,6 +17,21 @@ func TestInt(t *testing.T) {
 
 	// j=(int)0, Sizeof(int)=8
 	fmt.Printf("j=(%T)%v, Sizeof(int)=%v\n", j, j, unsafe.Sizeof(j))
+
+	// 二进制表示
+	var a = 0b1111
+	fmt.Printf("a=(%T)%v\n", a, a)
+
+	// 八进制表示
+	var b = 0o77
+	fmt.Printf("b=(%T)%v\n", b, b)
+
+	// 十六进制表示
+	var c = 0xFF
+	fmt.Printf("c=(%T)%v\n", c, c)
+
+	var d = 255
+	fmt.Printf("%d, %b, %o, %x, %X\n", d, d, d, d, d)
 
 	// 说明，如果运算的数都是整数，那么除后，去掉小数部分，保留整数部分
 	var f1 = 10 / 4

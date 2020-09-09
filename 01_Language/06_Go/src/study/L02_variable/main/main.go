@@ -1,8 +1,7 @@
-package hello
+package main
 
 import (
 	"fmt"
-	"testing"
 )
 
 // 如何一次性声明多个全局变量
@@ -18,7 +17,7 @@ var (
 	name2 = "mary"
 )
 
-func TestVariable(t *testing.T) {
+func main() {
 	// Golang 变量使用的三种方式
 	// 1. 指定变量类型，声明后若不赋值，使用零值 (zero value)
 	// int 的零值是 0
