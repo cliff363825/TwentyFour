@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import os
-import datetime
+import time
 
 
 def fileatime(filename):
@@ -9,4 +9,4 @@ def fileatime(filename):
 
 
 if __name__ == '__main__':
-    print(datetime.datetime.fromtimestamp(fileatime("test.txt")))
+    print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(fileatime("test.txt"))))

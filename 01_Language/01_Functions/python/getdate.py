@@ -1,30 +1,29 @@
 # coding: utf-8
-import datetime
+
+import time
 
 _MONTHNAMES = [None, "January", "February", "March", "April", "May", "June",
                "July", "August", "September", "October", "November", "December"]
-_DAYNAMES = [None, "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+_DAYNAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
 
-def getdate(ts=None):
-    if ts is not None:
-        d = datetime.datetime.fromtimestamp(ts)
-    else:
-        d = datetime.datetime.now()
+def getdate(timestamp=None):
+    if timestamp is None:
+        timestamp = time.time()
+    t = time.localtime(timestamp)
 
-    t = d.timetuple()
     res = {}
-    res["seconds"] = d.second
-    res["minutes"] = d.minute
-    res["hours"] = d.hour
-    res["mday"] = d.day
-    res["wday"] = d.isoweekday()
-    res["mon"] = d.month
-    res["year"] = d.year
+    res["seconds"] = t.tm_sec
+    res["minutes"] = t.tm_min
+    res["hours"] = t.tm_hour
+    res["mday"] = t.tm_mday
+    res["wday"] = t.tm_wday
+    res["mon"] = t.tm_mon
+    res["year"] = t.tm_year
     res["yday"] = t.tm_yday - 1
-    res["weekday"] = _DAYNAMES[d.isoweekday()]
-    res["month"] = _MONTHNAMES[d.month]
-    res[0] = int(d.timestamp())
+    res["weekday"] = _DAYNAMES[t.tm_wday]
+    res["month"] = _MONTHNAMES[t.tm_mon]
+    res[0] = timestamp
     return res
 
 

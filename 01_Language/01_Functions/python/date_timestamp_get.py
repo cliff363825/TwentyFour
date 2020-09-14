@@ -2,5 +2,6 @@
 
 import datetime
 
-d = datetime.datetime.now()
-print(d.timestamp())
+if __name__ == '__main__':
+    d = datetime.datetime.now()
+    print(d.timestamp())

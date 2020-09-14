@@ -2,6 +2,7 @@
 
 // set the default timezone to use. Available since PHP 5.1
 date_default_timezone_set('UTC');
+//date_default_timezone_set('Asia/Shanghai');
 
 
 // Prints something like: Monday

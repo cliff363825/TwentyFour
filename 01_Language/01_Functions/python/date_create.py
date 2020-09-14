@@ -2,5 +2,6 @@
 
 import datetime
 
-d = datetime.datetime(2000, 1, 1)
-print(d.strftime("%Y-%m-%d"))
+if __name__ == '__main__':
+    d = datetime.datetime(2000, 1, 1)
+    print(d.strftime("%Y-%m-%d"))

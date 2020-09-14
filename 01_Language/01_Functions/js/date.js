@@ -1,5 +1,5 @@
 // https://locutus.io/php/datetime/date/index.html
-function date(format, timestamp) {
+module.exports = function date(format, timestamp) {
     var jsdate, f
     // Keep this here (works, but for code commented-out below for file size reasons)
     // var tal= [];

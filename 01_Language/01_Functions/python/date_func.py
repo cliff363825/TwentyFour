@@ -1,13 +1,12 @@
 # coding: utf-8
 
-import time, datetime
+import time
 
 
-def date(format, timestamp=None, tz=None):
+def date(fmt, timestamp=None):
     if timestamp is None:
         timestamp = time.time()
-    d = datetime.datetime.fromtimestamp(timestamp, tz)
-    return d.strftime(format)
+    return time.strftime(fmt, time.localtime(timestamp))
 
 
 if __name__ == '__main__':
@@ -29,7 +28,7 @@ if __name__ == '__main__':
 
     # /* use the constants in the format parameter */
     # prints something like: Wed, 25 Sep 2013 15:28:57 -0700
-    print(date("%A, %d %b %Y %H:%M:%S %z", None, datetime.timezone.utc))
+    print(date("%A, %d %b %Y %H:%M:%S %z", None))
 
     # prints something like: 2000-07-01T00:00:00+00:00
-    print(date("%Y-%m-%dT%H:%M:%S %z", time.mktime((2000, 7, 1, 0, 0, 0, -1, -1, -1)), datetime.timezone.utc))
+    print(date("%Y-%m-%dT%H:%M:%S %z", time.mktime((2000, 7, 1, 0, 0, 0, -1, -1, -1))))
