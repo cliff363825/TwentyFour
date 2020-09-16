@@ -5,20 +5,26 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAccessor;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
 public class DateFunc {
     public static String date(String format) {
-        return date(format, new java.util.Date());
+        return date(format, new Date());
     }
 
     public static String date(String format, long timestamp) {
-        return date(format, new java.util.Date(timestamp));
+        return date(format, new Date(timestamp));
     }
 
-    public static String date(String format, java.util.Date d) {
+    public static String date(String format, Date d) {
         return date(format, d.toInstant().atZone(ZoneId.systemDefault()));
+    }
+
+    public static String date(String format, Calendar calendar) {
+        return date(format, calendar.getTime());
     }
 
     public static String date(String format, TemporalAccessor temporal) {

@@ -8,6 +8,3 @@ echo mktime(0, 0, 0, 7, 1, 2000) . "\n";
 
 echo date('Y-m-d H:i:s', gmmktime(0, 0, 0, 7, 1, 2000)) . "\n";
 echo date('Y-m-d H:i:s', mktime(0, 0, 0, 7, 1, 2000)) . "\n";
-
-$a = 1234.56;
-var_dump( $a / 1000 >> 0);
