@@ -572,3 +572,13 @@
 
 ### Golang 操作 Redis
 
+## Golang 下载第三方包
+
+```
+#设置代理
+alias go='http_proxy=socks5://127.0.0.1:1080 https_proxy=socks5://127.0.0.1:1080 go'
+
+#go get
+go get -t -v golang.org/x/crypto/ripemd160
+```
+

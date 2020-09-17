@@ -1,36 +1,26 @@
 package com.onevgo.functions;
 
+import com.google.common.base.CharMatcher;
+
 public class Chop {
-    // https://commons.apache.org/proper/commons-lang/apidocs/src-html/org/apache/commons/lang3/StringUtils.html#line.854
-    public static String chop(final String str) {
-        return chop(str, null);
+    public static String chop(String str) {
+        return CharMatcher.whitespace().trimTrailingFrom(str);
     }
 
-    public static String chop(final String str, final String stripChars) {
-        if (str == null) return "";
-        if (str.length() == 0) return str;
+    public static String chop(String str, String characterMask) {
+        return CharMatcher.anyOf(characterMask).trimTrailingFrom(str);
+    }
 
-        int end = str.length();
-        if (stripChars == null) {
-            while (end != 0 && Character.isWhitespace(str.charAt(end - 1))) {
-                end--;
-            }
-        } else if (stripChars.isEmpty()) {
-            return str;
-        } else {
-            while (end != 0 && stripChars.indexOf(str.charAt(end - 1)) != -1) {
-                end--;
-            }
-        }
-        return str.substring(0, end);
+    public static String chop(String str, char startInclusive, char endInclusive) {
+        return CharMatcher.inRange(startInclusive, endInclusive).trimTrailingFrom(str);
     }
 
     public static void main(String[] args) {
         String text = "\t\tThese are a few words :) ...  ";
-//        String binary = "\x09Example string\x0A";
+        String binary = (char) 9 + "Example string" + (char) 10;
         String hello = "Hello World";
         System.out.println(text);
-//        System.out.println(binary);
+        System.out.println(binary);
         System.out.println(hello);
 
         System.out.println(chop(text));
@@ -39,6 +29,6 @@ public class Chop {
 
         // trim the ASCII control characters at the end of $binary
         // (from 0 to 31 inclusive)
-//        System.out.println(chop(binary, "\x00..\x1F"));
+        System.out.println(chop(binary, (char) 0, (char) 31));
     }
 }
