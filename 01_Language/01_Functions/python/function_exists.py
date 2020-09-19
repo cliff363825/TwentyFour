@@ -19,6 +19,7 @@ if __name__ == '__main__':
     def foo():
         pass
 
+
     print(function_exists("foo"))
     print(function_exists("abs"))
     print(function_exists("abs1"))
