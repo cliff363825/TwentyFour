@@ -11,6 +11,7 @@ func File(filename string) ([]string, error) {
 		return nil, err
 	}
 	defer file.Close()
+
 	var res []string
 	reader := bufio.NewReader(file)
 	for {

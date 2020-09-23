@@ -1,9 +1,6 @@
 package com.onevgo.functions;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 public class FilePutContents {
     public static void filePutContents(String filename, byte[] data) {
@@ -22,6 +19,44 @@ public class FilePutContents {
             if (outputStream != null) {
                 try {
                     outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static void filePutContents(String filename, String data) {
+        FileWriter writer = null;
+        try {
+            writer = new FileWriter(new File(filename));
+            writer.write(data);
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static void filePutContents(String filename, String data, boolean append) {
+        FileWriter writer = null;
+        try {
+            writer = new FileWriter(new File(filename), append);
+            writer.write(data);
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
