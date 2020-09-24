@@ -2,7 +2,8 @@
 
 import math
 
-print(math.acosh(1))
-print(math.acosh(1.000000000000001))
-print(math.acosh(2))
-print(math.acosh(3))
+if __name__ == '__main__':
+    print(math.acosh(1))
+    print(math.acosh(1.000000000000001))
+    print(math.acosh(2))
+    print(math.acosh(3))

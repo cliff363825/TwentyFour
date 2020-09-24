@@ -6,6 +6,8 @@ import (
 )
 
 func TestAddslashes(t *testing.T) {
-	fmt.Println(Addslashes("' \" \\ \x00"))
+	s := "' \" \\ \x00"
+	fmt.Println(s)
+	fmt.Println(Addslashes(s))
 }
 

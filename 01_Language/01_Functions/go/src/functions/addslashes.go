@@ -2,7 +2,10 @@ package functions
 
 import "strings"
 
-func Addslashes(s string) string {
-	return strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(s,
-		"\\", "\\\\"), "'", "\\'"), "\"", "\\\""), "\x00", "\\0")
+func Addslashes(str string) string {
+	str = strings.ReplaceAll(str, "\\", "\\\\")
+	str = strings.ReplaceAll(str, "'", "\\'")
+	str = strings.ReplaceAll(str, "\"", "\\\"")
+	str = strings.ReplaceAll(str, "\x00", "\\0")
+	return str
 }
