@@ -1,11 +1,17 @@
 # coding: utf-8
 
-class bar(object):
-    def __init__(self):
-        print(type(self))
-        print(type(self).__name__)
+def get_class(obj):
+    return type(obj).__name__
 
-class foo(bar):
-    pass
 
-foo()
+if __name__ == '__main__':
+    class bar(object):
+        def __init__(self):
+            print(get_class(self))
+
+
+    class foo(bar):
+        pass
+
+
+    foo()

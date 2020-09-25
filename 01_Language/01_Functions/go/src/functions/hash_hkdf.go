@@ -3,16 +3,12 @@ package functions
 import (
 	"crypto"
 	"golang.org/x/crypto/hkdf"
-	"hash"
 )
 
 func HashHkdf(algo crypto.Hash, ikm []byte, length int, info []byte, salt []byte) ([]byte, error) {
-	h := algo.New()
-	kdf := hkdf.New(func() hash.Hash {
-		return h
-	}, ikm, salt, info)
+	kdf := hkdf.New(algo.New, ikm, salt, info)
 	if length == 0 {
-		length = h.Size()
+		length = algo.Size()
 	}
 	result := make([]byte, length)
 	n, err := kdf.Read(result)

@@ -1,34 +1,17 @@
 package com.onevgo.functions;
 
 import cn.hutool.core.util.HexUtil;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import cn.hutool.crypto.digest.Digester;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.Security;
 import java.util.Arrays;
 
 public class Hash {
-    static {
-        Security.addProvider(new BouncyCastleProvider());
-    }
-
     public static byte[] hash(String algo, byte[] data) {
-        try {
-            return MessageDigest.getInstance(algo).digest(data);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return new Digester(algo).digest(data);
     }
 
     public static String hash(String algo, byte[] data, boolean toLowerCase) {
-        try {
-            return HexUtil.encodeHexStr(MessageDigest.getInstance(algo).digest(data), toLowerCase);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return HexUtil.encodeHexStr(new Digester(algo).digest(data), toLowerCase);
     }
 
     public static void main(String[] args) {
