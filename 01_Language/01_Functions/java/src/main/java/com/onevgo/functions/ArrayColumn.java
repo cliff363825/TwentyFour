@@ -5,13 +5,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ArrayColumn {
-
-    public static <E, R> List<R> arrayColumn(Collection<E> col, Function<E, R> columnFunc) {
-        return col.stream().map(columnFunc).collect(Collectors.toList());
+    public static <E, R> List<R> arrayColumn(List<E> array, Function<E, R> column) {
+        return array.stream().map(column).collect(Collectors.toList());
     }
 
-    public static <E, K, V> Map<K, V> arrayColumn(Collection<E> col, Function<E, V> columnFunc, Function<E, K> indexFunc) {
-        return col.stream().collect(Collectors.toMap(indexFunc, columnFunc, (v, v2) -> v2, LinkedHashMap::new));
+    public static <E, K, V> Map<K, V> arrayColumn(List<E> array, Function<E, V> column, Function<E, K> indexKey) {
+        return array.stream().collect(Collectors.toMap(indexKey, column, (v, v2) -> v2, LinkedHashMap::new));
     }
 
     public static void main(String[] args) {

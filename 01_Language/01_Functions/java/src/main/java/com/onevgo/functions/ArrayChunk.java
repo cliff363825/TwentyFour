@@ -4,32 +4,32 @@ import java.util.*;
 import java.util.function.Supplier;
 
 public class ArrayChunk {
-    public static <E> List<List<E>> arrayChunk(Collection<E> col, int size) {
-        int cap = (int) Math.ceil(col.size() * 1.0 / size);
-        List<List<E>> res = new ArrayList<>(cap);
-        List<E> l = null;
-        for (E e : col) {
-            if (l == null || l.size() == size) {
-                l = new ArrayList<>(size);
-                res.add(l);
+    public static <E> List<List<E>> arrayChunk(List<E> input, int size) {
+        int capacity = (int) Math.ceil(input.size() * 1.0 / size);
+        List<List<E>> result = new ArrayList<>(capacity);
+        List<E> chunk = null;
+        for (E e : input) {
+            if (chunk == null || chunk.size() == size) {
+                chunk = new ArrayList<>(size);
+                result.add(chunk);
             }
-            l.add(e);
+            chunk.add(e);
         }
-        return res;
+        return result;
     }
 
-    public static <K, V> List<Map<K, V>> arrayChunk(Map<K, V> map, int size, Supplier<Map<K, V>> supplier) {
-        int cap = (int) Math.ceil(map.size() * 1.0 / size);
-        List<Map<K, V>> res = new ArrayList<>(cap);
-        Map<K, V> m = null;
-        for (Map.Entry<K, V> entry : map.entrySet()) {
-            if (m == null || m.size() == size) {
-                m = supplier.get();
-                res.add(m);
+    public static <K, V> List<Map<K, V>> arrayChunk(Map<K, V> input, int size, Supplier<Map<K, V>> supplier) {
+        int capacity = (int) Math.ceil(input.size() * 1.0 / size);
+        List<Map<K, V>> result = new ArrayList<>(capacity);
+        Map<K, V> chunk = null;
+        for (Map.Entry<K, V> entry : input.entrySet()) {
+            if (chunk == null || chunk.size() == size) {
+                chunk = supplier.get();
+                result.add(chunk);
             }
-            m.put(entry.getKey(), entry.getValue());
+            chunk.put(entry.getKey(), entry.getValue());
         }
-        return res;
+        return result;
     }
 
     public static void main(String[] args) {
