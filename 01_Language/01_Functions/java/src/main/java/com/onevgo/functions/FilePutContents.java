@@ -1,71 +1,28 @@
 package com.onevgo.functions;
 
-import java.io.*;
+import com.google.common.io.FileWriteMode;
+import com.google.common.io.Files;
+
+import java.io.File;
+import java.io.IOException;
 
 public class FilePutContents {
-    public static void filePutContents(String filename, byte[] data) {
-        filePutContents(filename, data, false);
-    }
-
-    public static void filePutContents(String filename, byte[] data, boolean append) {
-        FileOutputStream outputStream = null;
+    public static int filePutContents(String filename, byte[] data, FileWriteMode... flags) {
         try {
-            outputStream = new FileOutputStream(new File(filename), append);
-            outputStream.write(data);
-            outputStream.flush();
+            Files.asByteSink(new File(filename), flags).write(data);
+            return data.length;
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
+        return -1;
     }
 
-    public static void filePutContents(String filename, String data) {
-        FileWriter writer = null;
-        try {
-            writer = new FileWriter(new File(filename));
-            writer.write(data);
-            writer.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    public static void filePutContents(String filename, String data, boolean append) {
-        FileWriter writer = null;
-        try {
-            writer = new FileWriter(new File(filename), append);
-            writer.write(data);
-            writer.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+    public static int filePutContents(String filename, String data, FileWriteMode... flags) {
+        return filePutContents(filename, data.getBytes(), flags);
     }
 
     public static void main(String[] args) {
-        filePutContents("test.txt", "John Smith\n".getBytes(), true);
+        filePutContents("test.txt", "John Smith\n".getBytes(), FileWriteMode.APPEND);
         System.out.println(FileGetContents.fileGetContents("test.txt"));
     }
 }

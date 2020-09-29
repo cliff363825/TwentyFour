@@ -1,29 +1,28 @@
 package com.onevgo.functions;
 
-import cn.hutool.core.codec.Base64;
-
 public class ChunkSplit {
     public static String chunkSplit(String body) {
         return chunkSplit(body, 76, "\r\n");
     }
 
-    public static String chunkSplit(String body, int chunkLen, String end) {
-        StringBuilder sb = new StringBuilder();
-        int start = 0;
-        while (start + chunkLen <= body.length()) {
-            sb.append(body, start, start + chunkLen).append(end);
-            start += chunkLen;
+    public static String chunkSplit(String body, int chunklen, String end) {
+        StringBuilder sb = new StringBuilder(body);
+        for (int i = chunklen, j = 0; i < body.length(); i += chunklen, j++) {
+            sb.insert(i + j * end.length(), end);
         }
-        if (start < body.length()) {
-            sb.append(body, start, body.length()).append(end);
-        }
+        sb.append(end);
         return sb.toString();
+    }
+
+    private static String base64Encode(String data) {
+        return Base64Encode.base64Encode(data.getBytes());
     }
 
     public static void main(String[] args) {
         // format $data using RFC 2045 semantics
         String data = "Returns the chunked string.";
-        String new_string = chunkSplit(Base64.encode(data) + Base64.encode(data) + Base64.encode(data) + Base64.encode(data) + Base64.encode(data));
+        String new_string = chunkSplit((base64Encode(data) + base64Encode(data) + base64Encode(data) + base64Encode(data) + base64Encode(data)).substring(0, 75));
         System.out.println(new_string);
+        System.out.println(new_string.length());
     }
 }

@@ -1,13 +1,14 @@
 package com.onevgo.functions;
 
 public class BaseConvert {
-    public static String baseConvert(String s, int fromBase, int toBase) {
-        if (fromBase < 2 || fromBase > 36 || toBase < 2 || toBase > 36) return null;
+    public static String baseConvert(String number, int frombase, int tobase) {
+        if (frombase < 2 || frombase > 36 || tobase < 2 || tobase > 36) return null;
         try {
-            return Integer.toString(Integer.parseInt(s, fromBase), toBase);
+            return Integer.toString(Integer.parseInt(number, frombase), tobase);
         } catch (NumberFormatException e) {
-            return null;
+            e.printStackTrace();
         }
+        return null;
     }
 
     public static void main(String[] args) {

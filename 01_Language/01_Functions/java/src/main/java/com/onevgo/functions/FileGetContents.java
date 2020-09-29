@@ -1,49 +1,36 @@
 package com.onevgo.functions;
 
-import java.io.*;
+import com.google.common.io.Files;
+import com.google.common.io.Resources;
+
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class FileGetContents {
-    public static String fileGetContents(String filename) {
-        if (filename == null || filename.length() == 0) return null;
-        InputStream inputStream = null;
-        ByteArrayOutputStream outputStream = null;
+    public static byte[] fileGetContents(String filename) {
+        byte[] data = null;
         try {
             if ("http://".equalsIgnoreCase(filename.substring(0, 7)) || "https://".equalsIgnoreCase(filename.substring(0, 8))) {
-                inputStream = new URL(filename).openConnection().getInputStream();
+                data = Resources.asByteSource(new URL(filename)).read();
             } else {
-                inputStream = new FileInputStream(new File(filename));
+                data = Files.asByteSource(new File(filename)).read();
             }
-            outputStream = new ByteArrayOutputStream();
-            int len;
-            byte[] buf = new byte[8192];
-            while ((len = inputStream.read(buf)) != -1) {
-                outputStream.write(buf, 0, len);
-            }
-            return outputStream.toString("utf-8");
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
-        return null;
+        return data;
+    }
+
+    public static String fileGetContents(String filename, Charset character) {
+        byte[] data = fileGetContents(filename);
+        return data == null ? null : new String(data, character);
     }
 
     public static void main(String[] args) {
-        System.out.println(fileGetContents("test.txt"));
-        System.out.println(fileGetContents("https://www.onevgo.com"));
+        System.out.println(fileGetContents("test.txt", StandardCharsets.UTF_8));
+        System.out.println(fileGetContents("https://www.onevgo.com", StandardCharsets.UTF_8));
     }
 }

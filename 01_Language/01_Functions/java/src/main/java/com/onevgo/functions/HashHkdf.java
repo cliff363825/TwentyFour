@@ -1,6 +1,5 @@
 package com.onevgo.functions;
 
-import cn.hutool.core.util.RandomUtil;
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.digests.SHA256Digest;
 import org.bouncycastle.crypto.generators.HKDFBytesGenerator;
