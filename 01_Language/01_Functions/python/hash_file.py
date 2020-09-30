@@ -4,10 +4,14 @@ import hashlib
 
 
 def hash_file(algo, filename):
-    h = hashlib.new(algo)
     with open(filename, mode="rb") as f:
-        h.update(f.read())
-    return h.hexdigest()
+        h = hashlib.new(algo)
+        while True:
+            data = f.read(8192)
+            if data == b"":
+                break
+            h.update(data)
+        return h.hexdigest()
 
 
 if __name__ == '__main__':

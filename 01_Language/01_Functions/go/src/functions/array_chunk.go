@@ -1,17 +1,22 @@
 package functions
 
+import (
+	"math"
+)
+
 func ArrayChunk(arr []interface{}, size int) [][]interface{} {
-	res := make([][]interface{}, 0)
-	current := make([]interface{}, 0, size)
+	capacity := math.Ceil(float64(len(arr)) / float64(size))
+	result := make([][]interface{}, 0, int(capacity))
+	chunk := make([]interface{}, 0, size)
 	for _, v := range arr {
-		if len(current) == size {
-			res = append(res, current)
-			current = make([]interface{}, 0, size)
+		if len(chunk) == size {
+			result = append(result, chunk)
+			chunk = make([]interface{}, 0, size)
 		}
-		current = append(current, v)
+		chunk = append(chunk, v)
 	}
-	if len(current) > 0 {
-		res = append(res, current)
+	if len(chunk) > 0 {
+		result = append(result, chunk)
 	}
-	return res
+	return result
 }

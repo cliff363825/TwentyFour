@@ -12,6 +12,6 @@ public class HashHmacFile {
 
     public static void main(String[] args) throws IOException {
         FilePutContents.filePutContents("test.txt", "The quick brown fox jumped over the lazy dog.");
-        System.out.println(hashHmacFile("HMACMD5", "test.txt", "secret".getBytes()));
+        System.out.println(hashHmacFile("HmacMD5", "test.txt", "secret".getBytes()));
     }
 }
