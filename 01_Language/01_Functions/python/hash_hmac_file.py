@@ -8,7 +8,7 @@ def hash_hmac_file(alog, filename, key):
         h = hmac.new(key, None, alog)
         while True:
             data = f.read(8192)
-            if data == b"":
+            if not data:
                 break
             h.update(data)
         return h.hexdigest()

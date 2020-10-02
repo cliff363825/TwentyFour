@@ -8,7 +8,7 @@ def hash_file(algo, filename):
         h = hashlib.new(algo)
         while True:
             data = f.read(8192)
-            if data == b"":
+            if not data:
                 break
             h.update(data)
         return h.hexdigest()
