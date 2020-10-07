@@ -1,15 +1,16 @@
 package com.onevgo.functions;
 
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
+import org.apache.commons.lang3.time.DateUtils;
 
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Locale;
 
 public class DateParseFromFormat {
-    public static void main(String[] args) {
-        DateTime dateTime = DateUtil.parse("15-Feb-2009", "dd-MMM-yyyy", Locale.ENGLISH);
+    public static void main(String[] args) throws ParseException {
+        Date dateTime = DateUtils.parseDate("15-Feb-2009", Locale.ENGLISH, "dd-MMM-yyyy");
         System.out.println(dateTime);
 
         //jdk8+

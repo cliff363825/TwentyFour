@@ -1,6 +1,6 @@
 package com.onevgo.functions;
 
-import cn.hutool.core.date.DateUtil;
+import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -11,7 +11,7 @@ public class DateDateSet {
     public static void main(String[] args) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2001, Calendar.FEBRUARY, 3, 0, 0, 0);
-        System.out.println(DateUtil.format(calendar.getTime(), "yyyy-MM-dd"));
+        System.out.println(DateFormatUtils.format(calendar, "yyyy-MM-dd"));
 
         //jdk8+
         LocalDateTime localDateTime = LocalDateTime.now();

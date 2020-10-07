@@ -1,6 +1,6 @@
 package com.onevgo.functions;
 
-import cn.hutool.core.date.DateUtil;
+import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -14,7 +14,7 @@ public class DateModify {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2006, Calendar.DECEMBER, 12, 0, 0, 0);
         calendar.add(Calendar.DATE, 1);
-        System.out.println(DateUtil.format(calendar.getTime(), "yyyy-MM-dd"));
+        System.out.println(DateFormatUtils.format(calendar, "yyyy-MM-dd"));
 
         //jdk8+
         LocalDate date = LocalDate.of(2006, 12, 12);

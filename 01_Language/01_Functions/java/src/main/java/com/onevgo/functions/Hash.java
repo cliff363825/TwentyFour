@@ -11,8 +11,8 @@ public class Hash {
     }
 
     public static String hash(String algo, byte[] data, boolean toLowerCase) {
-        String result = BaseEncoding.base16().encode(new Digester(algo).digest(data));
-        return toLowerCase ? result.toLowerCase() : result;
+        BaseEncoding baseEncoding = toLowerCase ? BaseEncoding.base16().lowerCase() : BaseEncoding.base16().upperCase();
+        return baseEncoding.encode(new Digester(algo).digest(data));
     }
 
     public static void main(String[] args) {

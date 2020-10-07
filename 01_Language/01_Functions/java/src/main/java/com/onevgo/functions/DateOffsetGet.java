@@ -1,20 +1,20 @@
 package com.onevgo.functions;
 
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
+import org.apache.commons.lang3.time.DateUtils;
 
+import java.text.ParseException;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
 public class DateOffsetGet {
-    public static void main(String[] args) {
-        DateTime winter = DateUtil.parse("2010-12-21", "yyyy-MM-dd");
-        DateTime summer = DateUtil.parse("2008-06-21", "yyyy-MM-dd");
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"));
-        System.out.println(calendar.getTimeZone().getOffset(winter.getTime()));
-        System.out.println(calendar.getTimeZone().getOffset(summer.getTime()));
+    public static void main(String[] args) throws ParseException {
+        Date winter = DateUtils.parseDate("2010-12-21", "yyyy-MM-dd");
+        Date summer = DateUtils.parseDate("2008-06-21", "yyyy-MM-dd");
+        TimeZone timeZone = TimeZone.getTimeZone("America/New_York");
+        System.out.println(timeZone.getOffset(winter.getTime()));
+        System.out.println(timeZone.getOffset(summer.getTime()));
 
         //jdk8+
         System.out.println(OffsetDateTime.ofInstant(winter.toInstant(), ZoneId.of("America/New_York")).getOffset().getTotalSeconds());

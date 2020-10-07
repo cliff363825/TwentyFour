@@ -6,8 +6,6 @@ import com.google.common.io.BaseEncoding;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.Arrays;
 
 public class HashPbkdf2 {
     private final static int HASH_BYTES = 32;
