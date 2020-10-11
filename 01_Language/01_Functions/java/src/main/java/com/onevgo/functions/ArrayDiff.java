@@ -1,5 +1,7 @@
 package com.onevgo.functions;
 
+import com.google.common.collect.ImmutableList;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -22,8 +24,8 @@ public class ArrayDiff {
     }
 
     public static void main(String[] args) {
-        List<String> list1 = Arrays.asList("green", "red", "blue", "red");
-        List<String> list2 = Arrays.asList("green", "yellow", "red");
+        List<String> list1 = ImmutableList.of("green", "red", "blue", "red");
+        List<String> list2 = ImmutableList.of("green", "yellow", "red");
         System.out.println(arrayDiff(list1, list2));
     }
 }

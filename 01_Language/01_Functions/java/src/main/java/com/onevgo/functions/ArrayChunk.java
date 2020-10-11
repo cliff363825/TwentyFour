@@ -1,5 +1,7 @@
 package com.onevgo.functions;
 
+import com.google.common.collect.ImmutableList;
+
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -33,10 +35,10 @@ public class ArrayChunk {
     }
 
     public static void main(String[] args) {
-        List<String> list = Arrays.asList("a", "b", "c", "d", "e");
+        List<String> list = ImmutableList.of("a", "b", "c", "d", "e");
         System.out.println(arrayChunk(list, 2)); // [[a, b], [c, d], [e]]
 
-        HashMap<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
         map.put("k1", "v1");
         map.put("k2", "v2");
         map.put("k3", "v3");

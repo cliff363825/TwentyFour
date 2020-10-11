@@ -1,6 +1,7 @@
 package com.onevgo.functions;
 
-import java.util.Arrays;
+import com.google.common.collect.ImmutableList;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,8 +33,8 @@ public class ArrayCombine {
     }
 
     public static void main(String[] args) {
-        List<String> a = Arrays.asList("green", "red", "yellow");
-        List<String> b = Arrays.asList("avocado", "apple", "banana");
+        List<String> a = ImmutableList.of("green", "red", "yellow");
+        List<String> b = ImmutableList.of("avocado", "apple", "banana");
         Map<String, String> map = arrayCombine(a, b, LinkedHashMap::new);
         System.out.println(map);
     }
