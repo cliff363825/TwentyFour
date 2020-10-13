@@ -10,3 +10,6 @@ var_dump($str);
 
 $str = sprintf("The string ends in escape: %c", 27);
 var_dump($str);
+
+$str = chr(240) . chr(159) . chr(144) . chr(152);
+echo $str;
