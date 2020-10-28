@@ -2,7 +2,7 @@ package com.onevgo.functions;
 
 public class IsDouble {
     public static boolean isDouble(Object var) {
-        return var != null && var.getClass() == Double.class;
+        return var instanceof Double;
     }
 
     public static void main(String[] args) {
