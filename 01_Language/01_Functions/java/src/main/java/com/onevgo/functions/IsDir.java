@@ -1,10 +1,11 @@
 package com.onevgo.functions;
 
+import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class IsDir {
     public static boolean isDir(String filename) {
-        return Paths.get(filename).toFile().isDirectory();
+        return Files.isDirectory(Paths.get(filename));
     }
 
     public static void main(String[] args) {

@@ -1,10 +1,11 @@
 package com.onevgo.functions;
 
+import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class IsExecutable {
     public static boolean isExecutable(String filename) {
-        return Paths.get(filename).toFile().canExecute();
+        return Files.isExecutable(Paths.get(filename));
     }
 
     public static void main(String[] args) {

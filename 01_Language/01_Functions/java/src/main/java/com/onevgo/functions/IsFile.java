@@ -1,10 +1,11 @@
 package com.onevgo.functions;
 
+import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class IsFile {
     public static boolean isFile(String filename) {
-        return Paths.get(filename).toFile().isFile();
+        return Files.isRegularFile(Paths.get(filename));
     }
 
     public static void main(String[] args) {
