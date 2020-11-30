@@ -6,13 +6,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Gettimeofday {
-    public static Map<String, Object> gettimeofday() {
+    public static Map<String, Long> gettimeofday() {
         Instant now = Instant.now();
 
-        Map<String, Object> result = new HashMap<>();
+        Map<String, Long> result = new HashMap<>();
         result.put("sec", now.getEpochSecond());
-        result.put("usec", now.getNano() / 1000);
-        result.put("minuteswest", now.atZone(ZoneId.systemDefault()).getOffset().getTotalSeconds() / -60);
+        result.put("usec", now.getNano() / 1000L);
+        result.put("minuteswest", now.atZone(ZoneId.systemDefault()).getOffset().getTotalSeconds() / -60L);
         //result.put("dsttime", 0);
 
         return result;

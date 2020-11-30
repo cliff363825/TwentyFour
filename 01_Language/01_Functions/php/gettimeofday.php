@@ -1,6 +1,7 @@
 <?php
 
 //ini_set('date.timezone', 'America/Whitehorse');
+ini_set('date.timezone', 'Asia/Shanghai');
 
 print_r(gettimeofday());
 
