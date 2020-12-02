@@ -32,6 +32,6 @@ public class Localtime {
     }
 
     public static void main(String[] args) {
-
+        System.out.println(localtime());
     }
 }
