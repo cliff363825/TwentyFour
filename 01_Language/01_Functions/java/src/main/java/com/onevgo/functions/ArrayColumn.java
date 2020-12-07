@@ -1,16 +1,45 @@
 package com.onevgo.functions;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.IterUtil;
+import cn.hutool.core.util.ReflectUtil;
+
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class ArrayColumn {
-    public static <E, R> List<R> arrayColumn(List<E> array, Function<E, R> column) {
-        return array.stream().map(column).collect(Collectors.toList());
+    public static List<Object> arrayColumn(Iterable<?> array, String column) {
+        return CollectionUtil.getFieldValues(array, column);
     }
 
-    public static <E, K, V> Map<K, V> arrayColumn(List<E> array, Function<E, V> column, Function<E, K> indexKey) {
-        return array.stream().collect(Collectors.toMap(indexKey, column, (v, v2) -> v2, LinkedHashMap::new));
+    public static <T> List<T> arrayColumn(Iterable<?> array, String column, Class<T> elementType) {
+        return CollectionUtil.getFieldValues(array, column, elementType);
+    }
+
+    public static <T, K, V> Map<K, V> arrayColumn(Iterable<T> array, String column, String indexKey) {
+        Function<T, V> valueFunc;
+
+        if (column == null) {
+            valueFunc = v -> (V) v;
+        } else {
+            valueFunc = v -> {
+                if (v instanceof Map) {
+                    return (V) ((Map) v).get(column);
+                } else {
+                    return (V) ReflectUtil.getFieldValue(v, column);
+                }
+            };
+        }
+
+        Function<T, K> keyFunc = v -> {
+            if (v instanceof Map) {
+                return (K) ((Map) v).get(indexKey);
+            } else {
+                return (K) ReflectUtil.getFieldValue(v, indexKey);
+            }
+        };
+
+        return IterUtil.toMap(new LinkedHashMap<>(), array, keyFunc, valueFunc);
     }
 
     public static void main(String[] args) {
@@ -40,9 +69,9 @@ public class ArrayColumn {
         map4.put("last_name", "Doe");
         list.add(map4);
 
-        System.out.println(arrayColumn(list, e -> e.get("first_name")));
-        System.out.println(arrayColumn(list, e -> e.get("first_name"), e -> e.get("id")));
-        System.out.println(arrayColumn(list, e -> e, e -> e.get("id")));
+        System.out.println(arrayColumn(list, "first_name", String.class));
+        System.out.println(arrayColumn(list, "first_name", "id"));
+        System.out.println(arrayColumn(list, null, "id"));
 
         Person p1 = new Person(2135, "John", "Doe");
         Person p2 = new Person(3245, "Sally", "Smith");
@@ -53,7 +82,7 @@ public class ArrayColumn {
         people.add(p2);
         people.add(p3);
         people.add(p4);
-        System.out.println(arrayColumn(people, Person::getFirstName));
+        System.out.println(arrayColumn(people, "firstName"));
     }
 
     static class Person {

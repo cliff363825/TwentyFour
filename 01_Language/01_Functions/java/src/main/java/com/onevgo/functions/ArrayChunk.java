@@ -1,37 +1,23 @@
 package com.onevgo.functions;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.google.common.collect.ImmutableList;
 
 import java.util.*;
-import java.util.function.Supplier;
 
 public class ArrayChunk {
-    public static <E> List<List<E>> arrayChunk(List<E> input, int size) {
-        int capacity = (int) Math.ceil(input.size() * 1.0 / size);
-        List<List<E>> result = new ArrayList<>(capacity);
-        List<E> chunk = null;
-        for (E e : input) {
-            if (chunk == null || chunk.size() == size) {
-                chunk = new ArrayList<>(size);
-                result.add(chunk);
-            }
-            chunk.add(e);
-        }
-        return result;
+    public static <E> List<List<E>> arrayChunk(Collection<E> input, int size) {
+        return CollectionUtil.split(input, size);
     }
 
-    public static <K, V> List<Map<K, V>> arrayChunk(Map<K, V> input, int size, Supplier<Map<K, V>> supplier) {
-        int capacity = (int) Math.ceil(input.size() * 1.0 / size);
-        List<Map<K, V>> result = new ArrayList<>(capacity);
-        Map<K, V> chunk = null;
-        for (Map.Entry<K, V> entry : input.entrySet()) {
-            if (chunk == null || chunk.size() == size) {
-                chunk = supplier.get();
-                result.add(chunk);
+    public static <K, V> List<Map<K, V>> arrayChunk(Map<K, V> input, int size) {
+        return arrayChunk(input.entrySet(), size).stream().collect(ArrayList::new, (l, entries) -> {
+            Map<K, V> m = new LinkedHashMap<>();
+            for (Map.Entry<K, V> entry : entries) {
+                m.put(entry.getKey(), entry.getValue());
             }
-            chunk.put(entry.getKey(), entry.getValue());
-        }
-        return result;
+            l.add(m);
+        }, List::addAll);
     }
 
     public static void main(String[] args) {
@@ -44,6 +30,6 @@ public class ArrayChunk {
         map.put("k3", "v3");
         map.put("k4", "v4");
         map.put("k5", "v5");
-        System.out.println(arrayChunk(map, 2, LinkedHashMap::new));
+        System.out.println(arrayChunk(map, 2));
     }
 }
