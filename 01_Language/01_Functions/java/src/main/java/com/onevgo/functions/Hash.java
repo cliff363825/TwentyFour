@@ -1,7 +1,7 @@
 package com.onevgo.functions;
 
+import cn.hutool.core.util.HexUtil;
 import cn.hutool.crypto.digest.Digester;
-import com.google.common.io.BaseEncoding;
 
 import java.util.Arrays;
 
@@ -11,8 +11,7 @@ public class Hash {
     }
 
     public static String hash(String algo, byte[] data, boolean toLowerCase) {
-        BaseEncoding baseEncoding = toLowerCase ? BaseEncoding.base16().lowerCase() : BaseEncoding.base16().upperCase();
-        return baseEncoding.encode(new Digester(algo).digest(data));
+        return HexUtil.encodeHexStr(hash(algo, data), toLowerCase);
     }
 
     public static void main(String[] args) {
