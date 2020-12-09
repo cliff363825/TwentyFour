@@ -2,7 +2,6 @@ package com.onevgo.functions;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class ArrayChangeKeyCase {
@@ -10,26 +9,18 @@ public class ArrayChangeKeyCase {
         CASE_LOWER, CASE_UPPER
     }
 
-    public static Map<String, Object> arrayChangeKeyCase(Map<String, Object> map) {
-        return arrayChangeKeyCase(map, LinkedHashMap::new, CaseType.CASE_LOWER);
+    public static <V> Map<String, V> arrayChangeKeyCase(Map<String, V> map) {
+        return arrayChangeKeyCase(map, CaseType.CASE_LOWER);
     }
 
-    public static Map<String, Object> arrayChangeKeyCase(Map<String, Object> map, CaseType caseType) {
-        return arrayChangeKeyCase(map, LinkedHashMap::new, caseType);
-    }
-
-    public static Map<String, Object> arrayChangeKeyCase(Map<String, Object> map, Supplier<Map<String, Object>> supplier) {
-        return arrayChangeKeyCase(map, supplier, CaseType.CASE_LOWER);
-    }
-
-    public static Map<String, Object> arrayChangeKeyCase(Map<String, Object> map, Supplier<Map<String, Object>> supplier, CaseType caseType) {
+    public static <V> Map<String, V> arrayChangeKeyCase(Map<String, V> map, CaseType caseType) {
         return map.entrySet().stream().collect(Collectors.toMap(e -> {
             if (caseType == null || caseType == CaseType.CASE_LOWER) {
                 return e.getKey().toLowerCase();
             } else {
                 return e.getKey().toUpperCase();
             }
-        }, Map.Entry::getValue, (o, o2) -> o2, supplier));
+        }, Map.Entry::getValue, (o, o2) -> o2, LinkedHashMap::new));
     }
 
     public static void main(String[] args) {
@@ -37,6 +28,6 @@ public class ArrayChangeKeyCase {
         map.put("FirSt", 1);
         map.put("FirST", 2);
         map.put("SecOnd", 4);
-        System.out.println(arrayChangeKeyCase(map, LinkedHashMap::new, CaseType.CASE_UPPER));
+        System.out.println(arrayChangeKeyCase(map, CaseType.CASE_UPPER));
     }
 }
