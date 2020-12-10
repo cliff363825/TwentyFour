@@ -19,7 +19,7 @@ public class ArrayKeys {
     public static <K, V> List<K> arrayKeys(Map<K, V> map, V search) {
         return map.keySet().stream().filter(k -> {
             V v = map.get(k);
-            return v == search || (search != null && search.equals(v));
+            return Objects.equals(search, v);
         }).collect(Collectors.toList());
     }
 
@@ -27,7 +27,7 @@ public class ArrayKeys {
         List<Integer> res = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             E e = list.get(i);
-            if (e == search || (search != null && search.equals(e))) {
+            if (Objects.equals(search, e)) {
                 res.add(i);
             }
         }

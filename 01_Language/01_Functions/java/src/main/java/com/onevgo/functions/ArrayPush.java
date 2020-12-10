@@ -1,12 +1,11 @@
 package com.onevgo.functions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class ArrayPush {
-    public static <E> int arrayPush(List<E> list, E... args) {
-        list.addAll(Arrays.asList(args));
+    @SafeVarargs
+    public static <E> int arrayPush(Collection<E> list, E... args) {
+        Collections.addAll(list, args);
         return list.size();
     }
 

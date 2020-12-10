@@ -1,23 +1,32 @@
 package com.onevgo.functions;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class ArrayMerge {
-    public static <K, V> Map<K, V> arrayMerge(Map<K, V>... mapArgs) {
-        return Stream.of(mapArgs).reduce(new HashMap<>(), (map, map2) -> {
-            map.putAll(map2);
-            return map;
+    @SafeVarargs
+    public static <K, V> Map<K, V> arrayMerge(Map<K, V> array1, Map<K, V> array2, Map<K, V>... arrays) {
+        Stream.Builder<Map<K, V>> builder = Stream.builder();
+        builder.add(array1).add(array2);
+        for (Map<K, V> array : arrays) {
+            builder.add(array);
+        }
+        return builder.build().reduce(new LinkedHashMap<>(), (m1, m2) -> {
+            m1.putAll(m2);
+            return m1;
         });
     }
 
-    public static <E> List<E> arrayMerge(List<E>... listArgs) {
-        return Stream.of(listArgs).reduce(new ArrayList<>(), (list, list2) -> {
-            list.addAll(list2);
-            return list;
+    @SafeVarargs
+    public static <E> List<E> arrayMerge(List<E> array1, List<E> array2, List<E>... arrays) {
+        Stream.Builder<List<E>> builder = Stream.builder();
+        builder.add(array1).add(array2);
+        for (List<E> array : arrays) {
+            builder.add(array);
+        }
+        return builder.build().reduce(new ArrayList<>(), (l1, l2) -> {
+            l1.addAll(l2);
+            return l1;
         });
     }
 
