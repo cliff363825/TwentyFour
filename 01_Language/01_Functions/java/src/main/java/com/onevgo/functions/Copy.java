@@ -1,14 +1,14 @@
 package com.onevgo.functions;
 
-import com.google.common.io.Files;
-
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public class Copy {
     public static boolean copy(String source, String dest) {
         try {
-            Files.copy(new File(source), new File(dest));
+            Files.copy(Paths.get(source), Paths.get(dest), StandardCopyOption.REPLACE_EXISTING);
             return true;
         } catch (IOException e) {
             e.printStackTrace();

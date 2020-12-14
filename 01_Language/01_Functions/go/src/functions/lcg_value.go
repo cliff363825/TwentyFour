@@ -1,7 +1,11 @@
 package functions
 
-import "math/rand"
+import (
+	"math/rand"
+	"time"
+)
 
 func LcgValue() float64 {
-	return rand.Float64()
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	return r.Float64()
 }

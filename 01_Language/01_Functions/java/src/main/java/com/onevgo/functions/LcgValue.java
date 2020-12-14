@@ -1,10 +1,10 @@
 package com.onevgo.functions;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class LcgValue {
     public static double lcgValue() {
-        return new Random().nextDouble();
+        return ThreadLocalRandom.current().nextDouble();
     }
 
     public static void main(String[] args) {
