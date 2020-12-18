@@ -1,10 +1,10 @@
 package com.onevgo.functions;
 
-import com.google.common.io.BaseEncoding;
+import cn.hutool.core.util.HexUtil;
 
 public class Bin2Hex {
     public static String bin2Hex(byte[] data) {
-        return BaseEncoding.base16().encode(data);
+        return HexUtil.encodeHexStr(data);
     }
 
     public static void main(String[] args) {

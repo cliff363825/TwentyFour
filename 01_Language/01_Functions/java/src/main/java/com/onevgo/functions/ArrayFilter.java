@@ -7,8 +7,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class ArrayFilter {
-    public static <E> List<E> arrayFilter(Collection<E> col, Predicate<E> predicate) {
-        return col.stream().filter(predicate).collect(Collectors.toList());
+    public static <E> List<E> arrayFilter(Collection<E> input, Predicate<E> predicate) {
+        return input.stream().filter(predicate).collect(Collectors.toList());
     }
 
     public static void main(String[] args) {

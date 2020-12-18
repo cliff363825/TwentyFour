@@ -4,16 +4,20 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ArrayFlip {
-    public static <K> Map<K, Integer> arrayFlip(List<K> list) {
+    public static <K> Map<K, Integer> arrayFlip(Iterable<K> array) {
         Map<K, Integer> map = new LinkedHashMap<>();
-        for (int i = 0; i < list.size(); i++) {
-            map.put(list.get(i), i);
+        int value = 0;
+        for (K key : array) {
+            map.put(key, value);
+            value++;
         }
         return map;
     }
 
-    public static <K, V> Map<V, K> arrayFlip(Map<K, V> map) {
-        return map.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey, (o, o2) -> o2));
+    public static <K, V> Map<V, K> arrayFlip(Map<K, V> array) {
+        return array.entrySet().stream().collect(
+                Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey, (o, o2) -> o2, LinkedHashMap::new)
+        );
     }
 
     public static void main(String[] args) {

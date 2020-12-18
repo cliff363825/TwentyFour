@@ -1,7 +1,6 @@
 package com.onevgo.functions;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ArrayChangeKeyCase {
@@ -9,12 +8,13 @@ public class ArrayChangeKeyCase {
         CASE_LOWER, CASE_UPPER
     }
 
-    public static <V> Map<String, V> arrayChangeKeyCase(Map<String, V> map) {
-        return arrayChangeKeyCase(map, CaseType.CASE_LOWER);
+    public static <V> Map<String, V> arrayChangeKeyCase(Map<String, V> input) {
+        return arrayChangeKeyCase(input, CaseType.CASE_LOWER);
     }
 
-    public static <V> Map<String, V> arrayChangeKeyCase(Map<String, V> map, CaseType caseType) {
-        return map.entrySet().stream().collect(Collectors.toMap(e -> {
+    public static <V> Map<String, V> arrayChangeKeyCase(Map<String, V> input, CaseType caseType) {
+        Objects.requireNonNull(input);
+        return input.entrySet().stream().collect(Collectors.toMap(e -> {
             if (caseType == null || caseType == CaseType.CASE_LOWER) {
                 return e.getKey().toLowerCase();
             } else {

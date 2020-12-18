@@ -1,9 +1,8 @@
 package com.onevgo.functions;
 
 import cn.hutool.core.collection.IterUtil;
-import cn.hutool.core.collection.ListUtil;
-import com.google.common.collect.ImmutableList;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -13,12 +12,12 @@ public class ArrayCombine {
     }
 
     public static <K, V> Map<K, V> arrayCombine(K[] keys, V[] values) {
-        return IterUtil.toMap(ListUtil.of(keys), ListUtil.of(values), true);
+        return IterUtil.toMap(Arrays.asList(keys), Arrays.asList(values), true);
     }
 
     public static void main(String[] args) {
-        List<String> a = ImmutableList.of("green", "red", "yellow");
-        List<String> b = ImmutableList.of("avocado", "apple", "banana");
+        List<String> a = Arrays.asList("green", "red", "yellow");
+        List<String> b = Arrays.asList("avocado", "apple", "banana");
         Map<String, String> map = arrayCombine(a, b);
         System.out.println(map);
     }

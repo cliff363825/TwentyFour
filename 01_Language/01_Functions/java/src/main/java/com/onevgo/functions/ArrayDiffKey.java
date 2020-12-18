@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ArrayDiffKey {
+    @SafeVarargs
     public static <K, V> Map<K, V> arrayDiffKey(Map<K, V> map, Map<K, V>... maps) {
         Map<K, V> res = new LinkedHashMap<>();
         for (Map.Entry<K, V> entry : map.entrySet()) {

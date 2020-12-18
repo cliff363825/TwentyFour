@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class ArrayIntersect {
+    @SafeVarargs
     public static <E> List<E> arrayIntersect(Collection<E> col, Collection<E>... colArgs) {
         List<E> res = new ArrayList<>();
         for (E e : col) {
