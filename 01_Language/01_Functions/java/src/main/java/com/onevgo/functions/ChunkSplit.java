@@ -6,11 +6,10 @@ public class ChunkSplit {
     }
 
     public static String chunkSplit(String body, int chunklen, String end) {
-        StringBuilder sb = new StringBuilder(body);
-        for (int i = chunklen, j = 0; i < body.length(); i += chunklen, j++) {
-            sb.insert(i + j * end.length(), end);
+        StringBuilder sb = new StringBuilder();
+        for (int s = 0, e = body.length(); s < e; s += chunklen) {
+            sb.append(body, s, Math.min(s + chunklen, e)).append(end);
         }
-        sb.append(end);
         return sb.toString();
     }
 

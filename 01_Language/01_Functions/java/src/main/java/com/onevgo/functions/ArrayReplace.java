@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ArrayReplace {
+    @SafeVarargs
     public static <K, V> Map<K, V> arrayReplace(Map<K, V> map, Map<K, V>... mapArgs) {
         Map<K, V> res = new HashMap<>(map);
         for (Map<K, V> m : mapArgs) {

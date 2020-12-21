@@ -1,21 +1,19 @@
 package com.onevgo.functions;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.UnmodifiableIterator;
-
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class Key {
     public static void main(String[] args) {
-        ImmutableMap<String, String> map = ImmutableMap.<String, String>builder()
-                .put("fruit1", "apple")
-                .put("fruit2", "orange")
-                .put("fruit3", "grape")
-                .put("fruit4", "apple")
-                .put("fruit5", "apple")
-                .build();
+        HashMap<String, String> map = new HashMap<>();
+        map.put("fruit1", "apple");
+        map.put("fruit2", "orange");
+        map.put("fruit3", "grape");
+        map.put("fruit4", "apple");
+        map.put("fruit5", "apple");
 
-        UnmodifiableIterator<Map.Entry<String, String>> iterator = map.entrySet().iterator();
+        Iterator<Map.Entry<String, String>> iterator = map.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, String> item = iterator.next();
             if ("apple".equals(item.getValue())) {

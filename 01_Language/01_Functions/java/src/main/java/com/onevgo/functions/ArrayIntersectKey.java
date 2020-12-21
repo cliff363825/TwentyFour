@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ArrayIntersectKey {
+    @SafeVarargs
     public static <K, V> Map<K, V> arrayIntersectKey(Map<K, V> map, Map<K, V>... mapArgs) {
         Map<K, V> res = new LinkedHashMap<>();
         for (Map.Entry<K, V> entry : map.entrySet()) {
@@ -20,7 +21,6 @@ public class ArrayIntersectKey {
     }
 
     public static void main(String[] args) {
-
         Map<Object, Object> map1 = new LinkedHashMap<>();
         map1.put("blue", 1);
         map1.put("red", 2);
