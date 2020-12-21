@@ -1,8 +1,7 @@
 package com.onevgo.functions;
 
-import com.google.common.collect.Maps;
-
 import java.util.HashMap;
+import java.util.Map;
 
 public class JsonEncode {
     public static String jsonEncode(Object value) {
@@ -10,7 +9,7 @@ public class JsonEncode {
     }
 
     public static void main(String[] args) {
-        HashMap<String, Integer> map = Maps.newHashMap();
+        Map<String, Integer> map = new HashMap<>();
         map.put("a", 1);
         map.put("b", 2);
         map.put("c", 3);

@@ -1,13 +1,13 @@
 package com.onevgo.functions;
 
-import com.google.common.io.BaseEncoding;
+import cn.hutool.core.util.HexUtil;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class HashFinal {
     public static String hashFinal(MessageDigest digest) {
-        return BaseEncoding.base16().encode(digest.digest()).toLowerCase();
+        return HexUtil.encodeHexStr(digest.digest());
     }
 
     public static void main(String[] args) throws NoSuchAlgorithmException {

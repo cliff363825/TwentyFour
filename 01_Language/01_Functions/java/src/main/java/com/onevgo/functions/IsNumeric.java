@@ -1,9 +1,8 @@
 package com.onevgo.functions;
 
-import com.google.common.collect.Lists;
-
-import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class IsNumeric {
     public static boolean isNumeric(Object var) {
@@ -50,7 +49,7 @@ public class IsNumeric {
     }
 
     public static void main(String[] args) {
-        ArrayList<Serializable> tests = Lists.newArrayList("42",
+        List<Object> tests = Arrays.asList("42",
                 1337,
                 0x539,
                 02471,
@@ -66,13 +65,13 @@ public class IsNumeric {
                 "e0",
                 "0e",
                 "not numeric",
-                Lists.newArrayList(),
+                Collections.emptyList(),
                 9.1,
                 "9.1",
                 "9.",
                 ".1",
                 null);
-        for (Serializable s : tests) {
+        for (Object s : tests) {
             if (isNumeric(s)) {
                 System.out.println(s + " is numeric");
             } else {

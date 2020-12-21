@@ -1,6 +1,6 @@
 package com.onevgo.functions;
 
-import com.google.common.io.BaseEncoding;
+import cn.hutool.core.util.HexUtil;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -26,10 +26,10 @@ public class HashCopy {
 
         md5_copy.update("data".getBytes());
 
-        System.out.println(BaseEncoding.base16().encode(md5.digest()).toLowerCase());
-        System.out.println(BaseEncoding.base16().encode(md5_copy.digest()).toLowerCase());
+        System.out.println(HexUtil.encodeHexStr(md5.digest()));
+        System.out.println(HexUtil.encodeHexStr(md5_copy.digest()));
 
         md5.update("datadata".getBytes());
-        System.out.println(BaseEncoding.base16().encode(md5.digest()).toLowerCase());
+        System.out.println(HexUtil.encodeHexStr(md5.digest()));
     }
 }

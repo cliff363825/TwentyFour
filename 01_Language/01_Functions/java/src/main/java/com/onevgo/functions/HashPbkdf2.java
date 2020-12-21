@@ -1,7 +1,7 @@
 package com.onevgo.functions;
 
+import cn.hutool.core.util.HexUtil;
 import cn.hutool.crypto.SecureUtil;
-import com.google.common.io.BaseEncoding;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.PBEKeySpec;
@@ -30,9 +30,9 @@ public class HashPbkdf2 {
         salt = "abcdef".getBytes();
 
         byte[] bytes = hashPbkdf2("PBKDF2WithHmacSHA256", password, salt, iterations);
-        System.out.println(BaseEncoding.base16().encode(bytes).toLowerCase());
+        System.out.println(HexUtil.encodeHexStr(bytes));
 
         bytes = hashPbkdf2("PBKDF2WithHmacSHA256", password, salt, iterations, 10);
-        System.out.println(BaseEncoding.base16().encode(bytes).toLowerCase());
+        System.out.println(HexUtil.encodeHexStr(bytes));
     }
 }

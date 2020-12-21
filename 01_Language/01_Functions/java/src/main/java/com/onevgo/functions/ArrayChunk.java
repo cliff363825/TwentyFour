@@ -1,12 +1,24 @@
 package com.onevgo.functions;
 
-import cn.hutool.core.collection.CollectionUtil;
-
 import java.util.*;
 
 public class ArrayChunk {
     public static <E> List<List<E>> arrayChunk(Collection<E> input, int size) {
-        return CollectionUtil.split(input, size);
+        final List<List<E>> result = new ArrayList<>();
+        if (Empty.empty(input)) {
+            return result;
+        }
+
+        List<E> subList = new ArrayList<>(size);
+        for (E e : input) {
+            if (subList.size() >= size) {
+                result.add(subList);
+                subList = new ArrayList<>(size);
+            }
+            subList.add(e);
+        }
+        result.add(subList);
+        return result;
     }
 
     public static <K, V> List<Map<K, V>> arrayChunk(Map<K, V> input, int size) {

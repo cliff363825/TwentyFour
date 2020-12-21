@@ -1,7 +1,6 @@
 package com.onevgo.functions;
 
-import com.google.common.collect.Lists;
-
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,7 @@ public class InArray {
     }
 
     public static void main(String[] args) {
-        List<String> os = Lists.newArrayList("Mac", "NT", "Irix", "Linux");
+        List<String> os = Arrays.asList("Mac", "NT", "Irix", "Linux");
         System.out.println(inArray("Irix", os));
         System.out.println(inArray("mac", os));
     }

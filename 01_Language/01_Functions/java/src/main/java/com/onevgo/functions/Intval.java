@@ -1,8 +1,8 @@
 package com.onevgo.functions;
 
-import com.google.common.collect.Lists;
-
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 public class Intval {
     public static long intval(int var) {
@@ -112,8 +112,8 @@ public class Intval {
         System.out.println(intval("420000000000000000000"));
         System.out.println(intval(42, 8));
         System.out.println(intval("42", 8));
-        System.out.println(intval(Lists.newArrayList()));
-        System.out.println(intval(Lists.asList("foo", "bar", new String[]{})));
+        System.out.println(intval(Collections.emptyList()));
+        System.out.println(intval(Arrays.asList("foo", "bar", new String[]{})));
         System.out.println(intval(false));
         System.out.println(intval(true));
     }
