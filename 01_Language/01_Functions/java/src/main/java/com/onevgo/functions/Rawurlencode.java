@@ -1,7 +1,6 @@
 package com.onevgo.functions;
 
 import cn.hutool.core.net.URLEncoder;
-import org.apache.commons.codec.binary.Hex;
 
 import java.nio.charset.StandardCharsets;
 
