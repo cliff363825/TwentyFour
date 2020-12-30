@@ -7,6 +7,7 @@ import (
 	"net/http"
 )
 
+// single_curl("http://localhost:8080/log", json_encode($couponInfo));
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello, %q", r.URL.Path)

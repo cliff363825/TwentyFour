@@ -94,6 +94,7 @@ func TestSlice6(t *testing.T) {
 
 	fmt.Println("x=", x)
 	fmt.Println("y=", y)
+	fmt.Println("s=", s)
 }
 
 func TestSlice7(t *testing.T) {
