@@ -159,4 +159,20 @@ public class TestString {
         // bytes2 = [104, 101, 108, 108, 111, 44, -42, -48, -71, -6]
         System.out.println("bytes2 = " + Arrays.toString(bytes2));
     }
+
+    @Test
+    public void testCodePoint() {
+        String s = "🐘";
+        System.out.println(s.length()); // 2
+        System.out.println(s.codePointCount(0, s.length())); // 1
+        for (int i = 0; i < s.length(); i++) {
+            System.out.println(s.charAt(i)); // ? ?
+        }
+
+        for (int i = 0; i < s.length(); ) {
+            final int j = s.offsetByCodePoints(i, 1);
+            System.out.println(s.substring(i, j)); // 🐘
+            i = j;
+        }
+    }
 }
