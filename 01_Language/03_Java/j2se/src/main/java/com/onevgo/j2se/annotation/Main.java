@@ -1,21 +1,21 @@
-package annotation;
+package com.onevgo.j2se.annotation;
 
-import org.junit.Test;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestAnnotation {
-    @Test
-    public void testAnnotation() {
-        MyObject<String> myObject = new MyObject<>();
+@Slf4j
+public class Main {
+    public static void main(String[] args) {
+        ExampleObject<String> exampleObject = new ExampleObject<>();
 
         List list = new ArrayList();
-        myObject.addElement(list, 123);
-        System.out.println("list = " + list);
+        exampleObject.addElement(list, 123);
+        log.info("list = {}", list);
 
         // class annotations=[@annotation.MyAnnotation(name=MyAnnotation, items=[], value=MyObject)]
         // method annotations=[@annotation.MyAnnotation(name=MyAnnotation, items=[@annotation.MyItem(value=item1), @annotation.MyItem(value=item2)], value=showAnnotation)]
-        myObject.showAnnotation();
+        exampleObject.showAnnotation();
     }
 }

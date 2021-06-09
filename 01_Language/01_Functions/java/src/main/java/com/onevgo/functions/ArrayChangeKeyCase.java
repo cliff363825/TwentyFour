@@ -5,8 +5,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ArrayChangeKeyCase {
-    public static enum CaseType {
-        CASE_LOWER, CASE_UPPER
+    public enum CaseType {
+        //
+        CASE_LOWER,
+        CASE_UPPER
     }
 
     public static <V> Map<String, V> arrayChangeKeyCase(Map<String, V> input) {

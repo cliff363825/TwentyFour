@@ -1,4 +1,4 @@
-package annotation;
+package com.onevgo.j2se.annotation;
 
 import java.lang.annotation.*;
 
@@ -34,17 +34,17 @@ import static java.lang.annotation.ElementType.*;
 // @Inherited：被它修饰的 Annotation 将具有继承性。如果某个类使用了被 @Inherited 修饰的 Annotation，则其子类将自动具有该注解。
 //@Inherited
 
-@Repeatable(MyAnnotation.List.class)
-public @interface MyAnnotation {
+@Repeatable(ExampleAnnotation.List.class)
+public @interface ExampleAnnotation {
     String value();
 
-    String name() default "MyAnnotation";
+    String name() default "ExampleAnnotation";
 
-    MyItem[] items() default {};
+    ExampleItem[] items() default {};
 
     @Retention(RetentionPolicy.RUNTIME)
     @Documented
     @interface List {
-        MyAnnotation[] value();
+        ExampleAnnotation[] value();
     }
 }
