@@ -1,35 +1,39 @@
-package date;
+package com.onevgo.j2se.time;
 
-import org.junit.Test;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Set;
 
-public class TestZoneId {
-    @Test
-    public void testZoneId() {
+@Slf4j
+public class ZoneIdMain {
+    public static void main(String[] args) {
+//        testAvailableZoneIds();
+//        testZoneId();
+        testZonedDateTime();
+    }
+
+    private static void testAvailableZoneIds() {
         // ZoneId 的 getAvailableZoneIds()：获取所有的ZoneId
         Set<String> availableZoneIds = ZoneId.getAvailableZoneIds();
-        availableZoneIds.forEach(System.out::println);
+        log.info("{}", availableZoneIds);
     }
 
-    @Test
-    public void testZoneId2() {
+    private static void testZoneId() {
         // ZoneId的of()：获取指定时区的时间
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Tokyo"));
-        System.out.println("now = " + now);
+        log.info("Tokyo now = {}", now);
     }
 
-    @Test
-    public void testZoneId3() {
+    private static void testZonedDateTime() {
         // ZonedDateTime的now()：获取本时区的ZonedDateTime对象
         ZonedDateTime now = ZonedDateTime.now();
-        System.out.println("now = " + now); // now = 2019-12-22T18:24:24.799+08:00[Asia/Shanghai]
+        log.info("now = {}", now);
 
         // ZonedDateTime的now(ZoneId id)：获取指定时区的ZonedDateTime对象
         ZonedDateTime now1 = ZonedDateTime.now(ZoneId.of("Asia/Tokyo"));
-        System.out.println("now1 = " + now1); // now1 = 2019-12-22T19:25:24.458+09:00[Asia/Tokyo]
+        log.info("Tokyo now = {}", now1);
     }
 }
