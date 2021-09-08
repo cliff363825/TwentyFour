@@ -1,153 +1,100 @@
-package collection;
+package com.onevgo.j2se.collection;
 
-import org.junit.Test;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
-import java.util.function.*;
+import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class TestStream {
-    @Test
-    public void test01() {
-        Arrays.asList("a1", "a2", "a3")
-                .stream()
-                .findFirst()
-                .ifPresent(s -> System.out.println(s)); // a1
+@Slf4j
+public class StreamMain {
+    private static List<Person> people = Arrays.asList(
+            new Person("Max", 18),
+            new Person("Peter", 23),
+            new Person("Pamela", 23),
+            new Person("David", 12)
+    );
+
+    public static void main(String[] args) {
+//        testStream();
+//        testIntStream();
+//        testArrayToStream();
+//        testIntStreamMapToObj();
+//        testStreamMapToInt();
+//        testFilter();
+//        testAnyMatch();
+        testMapFilter();
     }
 
-    @Test
-    public void test02() {
-        Stream.of("a1", "a2", "a3")
-                .findFirst()
-                .ifPresent(s -> System.out.println(s)); // a1
+    private static void testStream() {
+        Arrays.asList("a1", "a2", "a3").stream().findFirst().ifPresent(s -> log.info("{}", s));
+        Stream.of("a1", "a2", "a3").findFirst().ifPresent(s -> log.info("{}", s));
     }
 
-    @Test
-    public void test03() {
-        IntStream.range(1, 4)
-                .forEach(value -> System.out.println(value));
-        // 1
-        // 2
-        // 3
+    private static void testIntStream() {
+        IntStream.range(1, 4).forEach(i -> log.info("{}", i));
     }
 
-    @Test
-    public void test04() {
-        Arrays.stream(new int[]{1, 2, 3})
-                .map(operand -> operand * 2 + 1)
-                .average()
-                .ifPresent(value -> System.out.println(value)); // 5.0
+    private static void testArrayToStream() {
+        int[] ints = {1, 2, 3};
+        Arrays.stream(ints).map(i -> i * 2 + 1).average().ifPresent(d -> log.info("{}", d));
     }
 
-    @Test
-    public void test05() {
-        IntStream.range(1, 4)
-                .mapToObj(value -> "a" + value)
-                .forEach(s -> System.out.println(s));
-        // a1
-        // a2
-        // a3
+    private static void testIntStreamMapToObj() {
+        IntStream.range(1, 4).mapToObj(i -> "a" + i).forEach(s -> log.info("{}", s));
     }
 
-    @Test
-    public void test06() {
-        Stream.of(1.0, 2.0, 3.0)
-                .mapToInt(value -> value.intValue())
-                .mapToObj(value -> "a" + value)
-                .forEach(s -> System.out.println(s));
-        // a1
-        // a2
-        // a3
+    private static void testStreamMapToInt() {
+        Stream.of(1.0, 2.0, 3.0).mapToInt(Double::intValue).mapToObj(i -> "a" + i).forEach(s -> log.info("{}", s));
     }
 
-    @Test
-    public void test07() {
-        Stream.of("d2", "a2", "b1", "b3", "c")
-                .filter(s -> {
-                    System.out.println("filter: " + s);
-                    return true;
-                })
-                .forEach(s -> System.out.println("forEach: " + s));
-        // filter: d2
-        // forEach: d2
-        // filter: a2
-        // forEach: a2
-        // filter: b1
-        // forEach: b1
-        // filter: b3
-        // forEach: b3
-        // filter: c
-        // forEach: c
+    private static void testFilter() {
+        Stream.of("d2", "a2", "b1", "b3", "c").filter(s -> {
+            log.info("filter: {}", s);
+            return true;
+        }).forEach(s -> log.info("forEach: {}", s));
     }
 
-    @Test
-    public void test08() {
-        Stream.of("d2", "a2", "b1", "b3", "c")
-                .map(s -> {
-                    System.out.println("map: " + s);
-                    return s.toUpperCase();
-                })
-                .anyMatch(s -> {
-                    System.out.println("anyMatch: " + s);
-                    return s.startsWith("A");
-                });
-        // map: d2
-        // anyMatch: D2
-        // map: a2
-        // anyMatch: A2
+    private static void testAnyMatch() {
+        Stream.of("d2", "a2", "b1", "b3", "c").map(s -> {
+            log.info("map: {}", s);
+            return s.toUpperCase();
+        }).anyMatch(s -> {
+            log.info("anyMatch: {}", s);
+            return s.startsWith("A");
+        });
     }
 
-    @Test
-    public void test09() {
-        Stream.of("d2", "a2", "b1", "b3", "c")
-                .map(s -> {
-                    System.out.println("map: " + s);
-                    return s.toUpperCase();
-                })
-                .filter(s -> {
-                    System.out.println("filter: " + s);
-                    return s.startsWith("A");
-                })
-                .forEach(s -> System.out.println("forEach: " + s));
-        // map: d2
-        // filter: D2
-        // map: a2
-        // filter: A2
-        // forEach: A2
-        // map: b1
-        // filter: B1
-        // map: b3
-        // filter: B3
-        // map: c
-        // filter: C
+    private static void testMapFilter() {
+        log.info("map -> filter -> forEach -> map -> ...");
+        Stream.of("d2", "a2", "b1", "b3", "c").map(s -> {
+            log.info("map: {}", s);
+            return s.toUpperCase();
+        }).filter(s -> {
+            log.info("filter: {}", s);
+            return s.startsWith("A");
+        }).forEach(s -> {
+            log.info("forEach: {}", s);
+        });
+
+        log.info("filter -> map -> forEach -> filter -> ...");
+        Stream.of("d2", "a2", "b1", "b3", "c").filter(s -> {
+            log.info("filter: {}", s);
+            return s.startsWith("a");
+        }).map(s -> {
+            log.info("map: {}", s);
+            return s.toUpperCase();
+        }).forEach(s -> {
+            log.info("forEach: {}", s);
+        });
+
+        // 能过滤则优先过滤 ！！
     }
 
-    @Test
-    public void test10() {
-        Stream.of("d2", "a2", "b1", "b3", "c")
-                .filter(s -> {
-                    System.out.println("filter: " + s);
-                    return s.startsWith("a");
-                })
-                .map(s -> {
-                    System.out.println("map: " + s);
-                    return s.toUpperCase();
-                })
-                .forEach(s -> System.out.println("forEach: " + s));
-        // filter: d2
-        // filter: a2
-        // map: a2
-        // forEach: A2
-        // filter: b1
-        // filter: b3
-        // filter: c
-    }
-
-    @Test
     public void test11() {
         Stream.of("d2", "a2", "b1", "b3", "c")
                 .sorted((o1, o2) -> {
@@ -180,7 +127,6 @@ public class TestStream {
         // filter: d2
     }
 
-    @Test
     public void test12() {
         Stream.of("d2", "a2", "b1", "b3", "c")
                 .filter(s -> {
@@ -205,7 +151,6 @@ public class TestStream {
         // forEach: A2
     }
 
-    @Test
     public void test13() {
         Supplier<Stream<String>> streamSupplier =
                 () -> Stream.of("d2", "a2", "b1", "b3", "c")
@@ -215,14 +160,6 @@ public class TestStream {
         streamSupplier.get().noneMatch(x -> true);
     }
 
-    private static List<Person> people = Arrays.asList(
-            new Person("Max", 18),
-            new Person("Peter", 23),
-            new Person("Pamela", 23),
-            new Person("David", 12)
-    );
-
-    @Test
     public void test14() {
         List<Person> p1 = people.stream()
                 .filter(person -> person.getName().startsWith("P"))
@@ -230,7 +167,7 @@ public class TestStream {
         System.out.println(p1); // [Person{name='Peter', age=23}, Person{name='Pamela', age=23}]
     }
 
-    @Test
+
     public void test15() {
         Map<Integer, List<Person>> peopleByAge = people.stream()
                 .collect(Collectors.groupingBy(person -> person.getAge()));
@@ -238,14 +175,14 @@ public class TestStream {
         // {18=[Person{name='Max', age=18}], 23=[Person{name='Peter', age=23}, Person{name='Pamela', age=23}], 12=[Person{name='David', age=12}]}
     }
 
-    @Test
+
     public void test16() {
         Double averageAge = people.stream()
                 .collect(Collectors.averagingInt(value -> value.getAge()));
         System.out.println(averageAge); // 19.0
     }
 
-    @Test
+
     public void test17() {
         IntSummaryStatistics ageSummary = people.stream()
                 .collect(Collectors.summarizingInt(value -> value.getAge()));
@@ -253,7 +190,7 @@ public class TestStream {
         // IntSummaryStatistics{count=4, sum=76, min=12, average=19.000000, max=23}
     }
 
-    @Test
+
     public void test18() {
         String phrase = people.stream()
                 .filter(person -> person.getAge() >= 18)
@@ -263,7 +200,7 @@ public class TestStream {
         // In Germany Max and Peter and Pamela are of legal age.
     }
 
-    @Test
+
     public void test19() {
         Map<Integer, String> map = people.stream()
                 .collect(Collectors.toMap(
@@ -276,7 +213,7 @@ public class TestStream {
         // {18=Max, 23=Peter;Pamela, 12=David}
     }
 
-    @Test
+
     public void test20() {
         String names = people.stream()
                 .collect(Collector.of(
@@ -289,7 +226,7 @@ public class TestStream {
         // MAX | PETER | PAMELA | DAVID
     }
 
-    @Test
+
     public void test21() {
         ArrayList<Foo> foos = new ArrayList<>();
 
@@ -315,14 +252,14 @@ public class TestStream {
         // Bar3 <- Foo3
     }
 
-    @Test
+
     public void test22() {
         people.stream()
                 .reduce((person, person2) -> person.getAge() > person2.getAge() ? person : person2)
                 .ifPresent(person -> System.out.println(person)); // Person{name='Pamela', age=23}
     }
 
-    @Test
+
     public void test23() {
         Person person = people.stream()
                 .reduce(new Person("", 0), (person1, person2) -> {
@@ -334,7 +271,7 @@ public class TestStream {
         // Person{name='MaxPeterPamelaDavid', age=76}
     }
 
-    @Test
+
     public void test24() {
         Integer age = people.stream()
                 .reduce(0, (integer, person) -> {
@@ -351,7 +288,7 @@ public class TestStream {
         // accumulator: sum=64; person=Person{name='David', age=12}
     }
 
-    @Test
+
     public void test25() {
         Integer age = people.parallelStream()
                 .reduce(0, (integer, person) -> {
@@ -372,14 +309,14 @@ public class TestStream {
         // 76
     }
 
-    @Test
+
     public void test26() {
         // -Djava.util.concurrent.ForkJoinPool.common.parallelism=5
         ForkJoinPool forkJoinPool = ForkJoinPool.commonPool();
         System.out.println(forkJoinPool.getParallelism()); // 3
     }
 
-    @Test
+
     public void test27() {
         Arrays.asList("a1", "a2", "b1", "c2", "c1")
                 .parallelStream()
@@ -411,7 +348,7 @@ public class TestStream {
         // forEach: C2 [ForkJoinPool.commonPool-worker-1]
     }
 
-    @Test
+
     public void test28() {
         Arrays.asList("a1", "a2", "b1", "c2", "c1")
                 .parallelStream()
@@ -453,7 +390,7 @@ public class TestStream {
         //forEach: C1 [ForkJoinPool.commonPool-worker-2]
     }
 
-    @Test
+
     public void test29() {
         people.parallelStream()
                 .reduce(0, (integer, person) -> {

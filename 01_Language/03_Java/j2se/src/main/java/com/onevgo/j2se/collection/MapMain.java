@@ -1,12 +1,12 @@
-package collection;
-
-import org.junit.Test;
+package com.onevgo.j2se.collection;
 
 import java.util.*;
 
-public class TestMap {
-    @Test
-    @SuppressWarnings("unchecked")
+public class MapMain {
+    public static void main(String[] args) {
+
+    }
+
     public void testHashMap1() {
         Map map = new HashMap();
         map.put("AA", 213);
@@ -20,7 +20,6 @@ public class TestMap {
         System.out.println("map.get(123) = " + map.get(123));
     }
 
-    @Test
     @SuppressWarnings("unchecked")
     public void testHashMap2() {
         Map map = new HashMap();
@@ -58,7 +57,6 @@ public class TestMap {
         }
     }
 
-    @Test
     @SuppressWarnings("unchecked")
     public void testLinkHashMap() {
         Map map = new LinkedHashMap();
@@ -75,7 +73,6 @@ public class TestMap {
         }
     }
 
-    @Test
     @SuppressWarnings("unchecked")
     public void testTreeMap1() {
         // 定制排序：Map的key实现Comparable接口
@@ -92,7 +89,6 @@ public class TestMap {
         }
     }
 
-    @Test
     @SuppressWarnings("unchecked")
     public void testTreeMap2() {
         // 定制排序：Comparator对象

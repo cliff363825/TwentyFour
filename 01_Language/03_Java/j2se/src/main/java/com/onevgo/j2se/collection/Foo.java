@@ -1,4 +1,4 @@
-package collection;
+package com.onevgo.j2se.collection;
 
 import java.util.ArrayList;
 import java.util.List;

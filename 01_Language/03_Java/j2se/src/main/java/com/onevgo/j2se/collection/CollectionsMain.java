@@ -1,26 +1,29 @@
-package collection;
+package com.onevgo.j2se.collection;
 
-import org.junit.Test;
+
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 
-public class TestCollections {
-    @Test
-    @SuppressWarnings("unchecked")
-    public void test1() {
+@Slf4j
+public class CollectionsMain {
+    public static void main(String[] args) {
         List list = new ArrayList();
         list.add("AAA");
         list.add("BBB");
         list.add(123);
         list.add(456);
 
-        System.out.println("list = " + list);
+        log.info("{}", list);
+
         // reverse(List): 反转List中元素的顺序
         Collections.reverse(list);
-        System.out.println("list = " + list);
+        log.info("reverse = {}", list);
+
         // shuffle(List): 对List几个元素进行随机排序
         Collections.shuffle(list);
-        System.out.println("list = " + list);
+        log.info("shuffle = {}", list);
+
         // sort(List): 根据元素的自然顺序对指定List几个元素按升序排序
         // java.lang.ClassCastException: java.lang.Integer cannot be cast to java.lang.String
 //        Collections.sort(list);
@@ -34,28 +37,30 @@ public class TestCollections {
                 return String.valueOf(o1).compareTo(String.valueOf(o2));
             }
         });
-        System.out.println("list = " + list);
-        Collections.swap(list, 0, 1);
-        System.out.println("list = " + list);
-    }
+        log.info("sort = {}", list);
 
-    @Test
-    public void test2() {
-        List<Integer> list = new ArrayList<Integer>();
+        Collections.swap(list, 0, 1);
+        log.info("swap = {}", list);
+
+        list.clear();
         list.add(123);
         list.add(789);
         list.add(456);
         list.add(123);
         list.add(456);
-        System.out.println("Collections.max(coll) = " + Collections.max(list));
-        System.out.println("Collections.min(coll) = " + Collections.min(list));
-        System.out.println("Collections.frequency(coll, 123) = " + Collections.frequency(list, 123));
 
-        List<Integer> list1 = new ArrayList<>(Arrays.asList(new Integer[list.size()]));
-        Collections.copy(list1, list);
-        System.out.println("list1 = " + list1);
-
+        // max
+        log.info("max = {}", Collections.max(list));
+        // min
+        log.info("min = {}", Collections.min(list));
+        // frequency
+        log.info("frequency = {}", Collections.frequency(list, 123));
+        // copy
+        List dest = Arrays.asList(new Integer[list.size()]);
+        Collections.copy(dest, list);
+        log.info("copy = {}", dest);
+        // replaceAll
         Collections.replaceAll(list, 123, 321);
-        System.out.println("list = " + list);
+        log.info("replaceAll = {}", list);
     }
 }

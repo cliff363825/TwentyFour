@@ -1,4 +1,4 @@
-package collection;
+package com.onevgo.j2se.collection;
 
 public class Person implements Comparable {
     private String name;
