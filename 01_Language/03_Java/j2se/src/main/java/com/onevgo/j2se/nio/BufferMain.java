@@ -36,7 +36,7 @@ import java.nio.ByteBuffer;
  * 直接缓冲区：通过 allocateDirect() 方法分配直接缓冲区，将缓冲区建立在物理内存中。可以提高效率
  */
 @Slf4j
-public class NioMain {
+public class BufferMain {
     public static void main(String[] args) {
 //        testBuffer();
         testDirect();
