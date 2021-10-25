@@ -1,5 +1,7 @@
 package reflection;
 
+import com.onevgo.j2se.reflection.IExample;
+import com.onevgo.j2se.reflection.Example;
 import org.junit.Test;
 
 import java.lang.reflect.Proxy;
@@ -7,10 +9,10 @@ import java.lang.reflect.Proxy;
 public class TestProxy {
     @Test
     public void test1() {
-        Person person = new Person();
-        DumpProxy<Person> handler = new DumpProxy<>(person);
+        Example person = new Example();
+        DumpProxy<Example> handler = new DumpProxy<>(person);
 //        IShow proxyInstance = (IShow) Proxy.newProxyInstance(Person.class.getClassLoader(), new Class[]{IShow.class}, handler);
-        IShow proxyInstance = (IShow) Proxy.newProxyInstance(Person.class.getClassLoader(), Person.class.getInterfaces(), handler);
-        proxyInstance.show();
+        IExample proxyInstance = (IExample) Proxy.newProxyInstance(Example.class.getClassLoader(), Example.class.getInterfaces(), handler);
+        proxyInstance.profile();
     }
 }
