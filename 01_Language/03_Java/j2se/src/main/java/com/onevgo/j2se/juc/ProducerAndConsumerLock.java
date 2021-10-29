@@ -1,14 +1,18 @@
-package juc;
+package com.onevgo.j2se.juc;
+
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class MyClerkLock implements IClerk {
+@Slf4j
+public class ProducerAndConsumerLock implements IProducerAndConsumer {
     private int productNum = 0;
     private Lock lock = new ReentrantLock();
     private Condition condition = lock.newCondition();
 
+    @Override
     public void produce() {
         lock.lock();
         try {
@@ -20,17 +24,18 @@ public class MyClerkLock implements IClerk {
 
             // 2. 干活
             productNum++;
-            System.out.println(Thread.currentThread().getName() + ": 生产商品=" + productNum);
+            log.info("生产商品={}", productNum);
 
             // 3. 通知唤醒
             condition.signalAll();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.error("error=", e);
         } finally {
             lock.unlock();
         }
     }
 
+    @Override
     public void consume() {
         lock.lock();
         try {
@@ -42,12 +47,12 @@ public class MyClerkLock implements IClerk {
 
             // 2. 干活
             productNum--;
-            System.out.println(Thread.currentThread().getName() + ": 取走商品=" + productNum);
+            log.info("取走商品={}", productNum);
 
             // 3. 通知唤醒
             condition.signalAll();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.error("error=", e);
         } finally {
             lock.unlock();
         }
