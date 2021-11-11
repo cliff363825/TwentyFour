@@ -1,10 +1,12 @@
-package enum_;
+package com.onevgo.j2se.enums;
 
 public enum SeasonEnum2 {
+    //
     SPRINT("春天", "春风又绿江南岸"),
     SUMMER("夏天", "映日荷花别样红"),
     AUTUMN("秋天", "秋水共长天一色"),
-    WINTER("冬天", "窗含西岭千秋雪");
+    WINTER("冬天", "窗含西岭千秋雪"),
+    ;
 
     // 1. 枚举类对象的属性不应允许被改动，所以应该使用private final修饰
     private final String seasonName;

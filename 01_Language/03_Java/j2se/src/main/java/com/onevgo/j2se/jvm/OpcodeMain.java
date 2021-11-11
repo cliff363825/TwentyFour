@@ -1,12 +1,9 @@
-package hello;
+package com.onevgo.j2se.jvm;
 
-import org.junit.Test;
-
-public class TestOperator {
+public class OpcodeMain {
     // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html
     // Jvm字节码指令
-    @Test
-    public void testOperator1() {
+    public static void main(String[] args) {
         // iconst_1: 将int常量<i=1>压入操作数栈。
         // istore_1: 将操作数栈顶的int值弹出，局部变量<n=1>的值设置为(value=1)。
         int i = 1;

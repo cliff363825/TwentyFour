@@ -1,4 +1,4 @@
-package hello;
+package com.onevgo.j2se.init;
 
 /**
  * 子类的初始化 <clinit>();
@@ -47,16 +47,19 @@ public class Son extends Father {
         return "儿子";
     }
 
+    @Override
     public String initName() {
         System.out.print("(14)"); // 7 12
         return "张狗蛋";
     }
 
+    @Override
     public int initAge() {
         System.out.print("(15)"); // 8 13
         return 18;
     }
 
+    @Override
     public Integer initSalary() {
         System.out.print("(16)"); // 10 15
         return 18000;

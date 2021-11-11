@@ -1,15 +1,18 @@
-package generic;
+package com.onevgo.j2se.generic;
+
+import lombok.ToString;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-public class Person<T> {
+@ToString
+public class Example<T> {
     // 使用T类型定义变量
-    private T info;
+    private T delegate;
 
     private Class<T> clazz;
 
-    public Person() {
+    public Example() {
         // 1. 获取带有泛型的父类 Type
         Type genericSuperclass = getClass().getGenericSuperclass();
         // 2. 判断父类 Type 是不是参数化类型 ParameterizedType
@@ -25,17 +28,18 @@ public class Person<T> {
     }
 
     // 使用T类型定义构造器
-    public Person(T info) {
-        this.info = info;
+    public Example(T delegate) {
+        this();
+        this.delegate = delegate;
     }
 
     // 使用T类型定义一般方法
-    public T getInfo() {
-        return info;
+    public T getDelegate() {
+        return delegate;
     }
 
-    public void setInfo(T info) {
-        this.info = info;
+    public void setDelegate(T delegate) {
+        this.delegate = delegate;
     }
 
     // static的方法中不能使用类的泛型
@@ -49,14 +53,8 @@ public class Person<T> {
 //        }
 //    }
 
-    public void showGeneric() {
-        System.out.println(clazz);
+    public Class<T> getClazz() {
+        return clazz;
     }
 
-    @Override
-    public String toString() {
-        return "Person{" +
-                "info=" + info +
-                '}';
-    }
 }

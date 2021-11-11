@@ -1,4 +1,4 @@
-package enum_;
+package com.onevgo.j2se.enums;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +34,11 @@ public class SeasonEnum1 {
         return ENUMS.toArray(new SeasonEnum1[0]);
     }
 
+    /**
+     * @param name
+     * @return
+     * @see Enum#valueOf(java.lang.Class, java.lang.String)
+     */
     public static SeasonEnum1 valueOf(String name) {
         switch (name) {
             case "SPRINT":
@@ -49,12 +54,24 @@ public class SeasonEnum1 {
         }
     }
 
-    public int ordinal() {
+    /**
+     * @return
+     * @see Enum#ordinal()
+     */
+    public final int ordinal() {
         for (int i = 0; i < ENUMS.size(); i++) {
             if (ENUMS.get(i) == this) {
                 return i;
             }
         }
         return -1;
+    }
+
+    @Override
+    public String toString() {
+        return "SeasonEnum1{" +
+                "seasonName='" + seasonName + '\'' +
+                ", seasonDesc='" + seasonDesc + '\'' +
+                '}';
     }
 }

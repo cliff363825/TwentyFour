@@ -1,10 +1,7 @@
-package hello;
+package com.onevgo.j2se.init;
 
-import org.junit.Test;
-
-public class TestInit {
-    @Test
-    public void test1() {
+public class InitMain {
+    public static void main(String[] args) {
         // 类的初始化过程 <clinit>()
         // 1. 一个类要创建实例需要先加载并初始化该类
         // 2. 一个子类要初始化需要先初始化父类

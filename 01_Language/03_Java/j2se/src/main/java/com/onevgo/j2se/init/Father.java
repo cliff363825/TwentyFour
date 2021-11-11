@@ -1,4 +1,4 @@
-package hello;
+package com.onevgo.j2se.init;
 
 /**
  * 父类的初始化 <clinit>();
