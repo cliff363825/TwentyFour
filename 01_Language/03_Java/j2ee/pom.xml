@@ -16,7 +16,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <spring.version>4.3.22.RELEASE</spring.version>
+        <spring.version>5.2.20.RELEASE</spring.version>
         <org.jooq.version>3.9.6</org.jooq.version>
         <db.driver>com.mysql.jdbc.Driver</db.driver>
         <db.url>jdbc:mysql://localhost:3306/default</db.url>
