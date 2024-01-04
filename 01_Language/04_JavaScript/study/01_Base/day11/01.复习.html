@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title></title>
+    <script type="text/javascript">
+        var name = "我是window";
+
+        var obj = {
+            name: "我是object",
+            sayHello: function () {
+                console.log("name1 = ", this.name);
+                // 解决this漂移问题
+                var that = this;
+
+                function test() {
+                    console.log("name2 = ", this.name);
+                    console.log("name3 = ", that.name);
+                }
+
+                test(); // => window.test() => test.call(window, ...args)
+            }
+        };
+        obj.sayHello(); // => sayHello(obj, ...args)
+        // name1 =  我是object
+        // name2 =  我是window
+        // name3 =  我是object
+
+        var fun = obj.sayHello;
+        fun(); // => window.fun() => fun.call(window, ...args)
+        // name1 =  我是window
+        // name2 =  我是window
+        // name3 =  我是window
+    </script>
+</head>
+<body>
+
+</body>
+</html>
